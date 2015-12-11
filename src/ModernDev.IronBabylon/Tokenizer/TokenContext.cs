@@ -5,6 +5,8 @@ namespace ModernDev.IronBabylon
 {
     public class TokenContext
     {
+        #region Class constructors
+
         public TokenContext(string token, bool isExpr = false, bool preserveSpace = false,
             Func<Tokenizer, TokenType> over = null)
         {
@@ -14,12 +16,19 @@ namespace ModernDev.IronBabylon
             Override = over;
         }
 
-        public string Token { get; set; }
-        public bool IsExpr { get; set; }
-        public bool PreserveSpace { get; set; }
-        public Func<Tokenizer, TokenType> Override { get; set; }
+        #endregion
 
-        public static Dictionary<string, TokenContext> Types = new Dictionary<string, TokenContext>
+        #region Class fields
+
+        public string Token { get; set; }
+
+        public bool IsExpr { get; private set; }
+
+        public bool PreserveSpace { get; private set; }
+
+        public Func<Tokenizer, TokenType> Override { get; private set; }
+
+        public static readonly Dictionary<string, TokenContext> Types = new Dictionary<string, TokenContext>
         {
             {"b_stat", new TokenContext("{")},
             {"b_expr", new TokenContext("{", true)},
@@ -32,5 +41,7 @@ namespace ModernDev.IronBabylon
             {"j_cTag", new TokenContext("</tag")},
             {"j_expr", new TokenContext("<tag>...</tag>", true, true)}
         };
+
+        #endregion
     }
 }

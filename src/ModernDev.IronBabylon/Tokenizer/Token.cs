@@ -7,6 +7,8 @@ namespace ModernDev.IronBabylon
     /// </summary>
     public class Token
     {
+        #region Class constructors
+
         public Token(State state)
         {
             Type = state.Type;
@@ -16,19 +18,20 @@ namespace ModernDev.IronBabylon
             Location = new SourceLocation(state.StartLoc, state.EndLoc);
         }
 
-        public Token(TokenType type, string value, int start, int end, SourceLocation loc)
-        {
-            Type = type;
-            Value = value;
-            Start = start;
-            End = end;
-            Location = loc;
-        }
+        #endregion
+
+        #region Class fields
 
         public TokenType Type { get; set; }
+
         public object Value { get; set; }
+
         public int Start { get; set; }
+
         public int End { get; set; }
+
         public SourceLocation Location { get; set; }
+
+        #endregion
     }
 }

@@ -10,21 +10,34 @@ namespace ModernDev.IronBabylon
 {
     public partial class Tokenizer
     {
+        #region Class constructors
+
         public Tokenizer(ParserOptions options, string input )
         {
             State = new State(options, input);
         }
 
-        public State State { get; set; }
-        public bool IsLookahead { get; set; }
-        public string Input { get; set; }
-        public bool InModule { get; set; }
+        #endregion
 
-        protected Dictionary<string, TokenType> TT => TokenType.Types;
+        #region Class properties
+
+        public State State { get; set; }
+
+        public bool IsLookahead { get; set; }
+
+        public string Input { get; protected set; }
+
+        public bool InModule { get; set; }
 
         public TokenContext CurrentContext => State.Context.Last();
 
-        public static string CodePointToString(int code)
+        protected static Dictionary<string, TokenType> TT => TokenType.Types;
+
+        #endregion
+
+        #region Class methods
+
+        private static string CodePointToString(int code)
             => code <= 0xffff
                 ? ToChar(code).ToString()
                 : $"{ToChar(((code - 0x10000) >> 10) + 0xD800)}{ToChar(((code - 0x10000) & 1023) + 0xDC00)}";
@@ -1153,6 +1166,8 @@ namespace ModernDev.IronBabylon
                 State.ExprAllowed = type.BeforeExpr;
             }
         }
+
+        #endregion
     }
 }
       
