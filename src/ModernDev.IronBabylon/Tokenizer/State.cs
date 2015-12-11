@@ -4,6 +4,8 @@ namespace ModernDev.IronBabylon
 {
     public class State
     {
+        #region Class constructors
+
         public State(ParserOptions options, string input)
         {
             Strict = options.StrictMode != false && options.SourceType == "module";
@@ -33,17 +35,29 @@ namespace ModernDev.IronBabylon
             _parserOptions = options;
         }
 
+        #endregion
+
+        #region Class fields
+
         private readonly ParserOptions _parserOptions;
 
+        #endregion
+
+        #region Class properties
+
         public bool Strict { get; set; }
+
         public string Input { get; set; }
 
         /// <summary>
         /// Used to signify the start of a potential arrow function
         /// </summary>
         public int PotentialArrowAt { get; set; }
+
         public bool InAsync { get; set; }
+
         public bool InGenerator { get; set; }
+
         public bool InMethod { get; set; }
 
         /// <summary>
@@ -65,25 +79,41 @@ namespace ModernDev.IronBabylon
         /// Comment store.
         /// </summary>
         public List<Node> Comments { get; set; }
+
         public List<Node> TrailingComments { get; set; }
+
         public List<Node> LeadingComments { get; set; }
+
         public List<Node> CommentStack { get; set; }
+
         public int Position { get; set; }
+
         public int LineStart { get; set; }
+
         public int CurLine { get; set; }
+
         public TokenType Type { get; set; }
+
 
         /// <summary>
         /// For tokens that include more information than their type, the value
         /// </summary>
         public object Value { get; set; }
+
         public int Start { get; set; }
+
         public int End { get; set; }
+
         public Position StartLoc { get; set; }
+
         public Position EndLoc { get; set; }
+
         public Position LastTokenEndLoc { get; set; }
+
         public Position LastTokenStartLoc { get; set; }
+
         public int LastTokenStart { get; set; }
+
         public int LastTokenEnd { get; set; }
 
         /// <summary>
@@ -101,11 +131,20 @@ namespace ModernDev.IronBabylon
         /// escape sequences must not be interpreted as keywords.
         /// </summary>
         public bool ContainsEsc { get; set; }
+
         public bool ContainsOctal { get; set; }
+
         public int? OctalPosition { get; set; }
+
         public bool InFunction { get; set; }
+
         public Position CurrentPosition => new Position(CurLine, Position - LineStart);
+
         public bool InType { get; set; }
+
+        #endregion
+
+        #region CLass methods
 
         public State Clone(bool skipArrays = false)
         {
@@ -140,5 +179,7 @@ namespace ModernDev.IronBabylon
 
             return state;
         }
+
+        #endregion
     }
 }
