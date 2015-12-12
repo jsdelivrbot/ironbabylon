@@ -8,7 +8,7 @@ namespace ModernDev.IronBabylon
             End = end;
         }
 
-        private Position Start { get; set; }
+        public Position Start { get; set; }
         public Position End { get; set; }
     }
 }
