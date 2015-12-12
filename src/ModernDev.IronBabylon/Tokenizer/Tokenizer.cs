@@ -12,7 +12,7 @@ namespace ModernDev.IronBabylon
     {
         #region Class constructors
 
-        public Tokenizer(ParserOptions options, string input )
+        protected Tokenizer(ParserOptions options, string input )
         {
             State = new State(options, input);
         }
@@ -21,13 +21,13 @@ namespace ModernDev.IronBabylon
 
         #region Class properties
 
-        public State State { get; set; }
+        public State State { get; protected set; }
 
-        public bool IsLookahead { get; set; }
+        private bool IsLookahead { get; set; }
 
         public string Input { get; protected set; }
 
-        public bool InModule { get; set; }
+        protected bool InModule { get; set; }
 
         public TokenContext CurrentContext => State.Context.Last();
 
@@ -45,7 +45,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Move to the next token
         /// </summary>
-        public void Next()
+        protected void Next()
         {
             if (!IsLookahead)
             {
@@ -60,7 +60,7 @@ namespace ModernDev.IronBabylon
             NextToken();
         }
 
-        public bool Eat(TokenType type)
+        protected bool Eat(TokenType type)
         {
             if (Match(type))
             {
@@ -72,9 +72,9 @@ namespace ModernDev.IronBabylon
             return false;
         }
 
-        public bool Match(TokenType type) => State.Type == type;
+        protected bool Match(TokenType type) => State.Type == type;
 
-        public virtual bool IsKeyword(string word) => Util.IsKeyword(word);
+        protected virtual bool IsKeyword(string word) => Util.IsKeyword(word);
 
         public State Lookahead()
         {

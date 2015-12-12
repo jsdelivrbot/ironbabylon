@@ -8,7 +8,7 @@ namespace ModernDev.IronBabylon
     {
         #region Class constructors
 
-        public TokenType(string label, TokenTypeConfig config = null)
+        private TokenType(string label, TokenTypeConfig config = null)
         {
             Label = label;
             Keyword = config?.Keyword;
@@ -36,7 +36,7 @@ namespace ModernDev.IronBabylon
 
         private static Dictionary<string, TokenContext> TC => TokenContext.Types;
 
-        public string Label { get; set; }
+        private string Label { get; set; }
 
         public string Keyword { get; private set; }
 
@@ -52,7 +52,7 @@ namespace ModernDev.IronBabylon
 
         public bool Prefix { get; private set; }
 
-        public bool Postfix { get; set; }
+        private bool Postfix { get; set; }
 
         public int? Binop { get; private set; }
 
