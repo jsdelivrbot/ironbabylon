@@ -15,8 +15,6 @@ namespace ModernDev.IronBabylon
 
         public void ProcessComment(Node node)
         {
-            Console.WriteLine($"ProccessComment {node.Value} {node.Body == null}");
-
             if (node.Type == "Program" && (node.Body is IList && ((List<Node>) node.Body).Any()))
             {
                 return;
