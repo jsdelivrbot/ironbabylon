@@ -36,7 +36,7 @@ namespace ModernDev.IronBabylon
 
         private static Dictionary<string, TokenContext> TC => TokenContext.Types;
 
-        private string Label { get; set; }
+        public string Label { get; set; }
 
         public string Keyword { get; private set; }
 
