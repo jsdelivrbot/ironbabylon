@@ -52,7 +52,7 @@ namespace ModernDev.IronBabylon
 
         public bool Prefix { get; private set; }
 
-        private bool Postfix { get; set; }
+        public bool Postfix { get; set; }
 
         public int? Binop { get; private set; }
 
