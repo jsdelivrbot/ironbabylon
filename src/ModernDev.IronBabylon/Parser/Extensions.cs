@@ -70,5 +70,7 @@ namespace ModernDev.IronBabylon
         public static List<T> Slice<T>(this List<T> source, int start) => source.Slice(start, source.Count);
 
         public static bool ToBool(this int num) => ToBoolean(num);
+
+        public static bool ToBool(this int? num) => ToBoolean(num);
     }
 }
