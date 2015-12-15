@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using static System.Convert;
@@ -144,21 +145,35 @@ namespace ModernDev.IronBabylon
             return curContext.Override != null ? curContext.Override(this) : ReadToken(FullCharCodeAtPos());
         }
 
-        public virtual TokenType ReadToken(int code)
-            => IsIdentifierStart(code) || code == 92 ? ReadWord() : GetTokenFromCode(code);
+        public virtual TokenType ReadToken(int? code)
+            => IsIdentifierStart(code) || code == 92 ? ReadWord() : GetTokenFromCode((int) code);
 
-        public int FullCharCodeAtPos()
+        public int? FullCharCodeAtPos()
         {
-            var code = Input[State.Position];
+            int? code = null;
+            int? next = null;
+
+            if (State.Position < Input.Length)
+            {
+                code = Input[State.Position];
+            }
 
             if (code <= 0xd7ff || code >= 0xe000)
             {
                 return code;
             }
 
-            var next = Input[State.Position + 1];
+            if (State.Position + 1 < Input.Length)
+            {
+                next = Input[State.Position + 1];
+            }
 
-            return (code << 10) + next - 0x35fdc00;
+            if (code.ToBool() && next.ToBool())
+            {
+                return (code << 10) + next - 0x35fdc00;
+            }
+
+            return null;
         }
 
         public void PushComment(bool block, string text, int start, int end, Position startLoc, Position endLoc)
@@ -530,25 +545,6 @@ namespace ModernDev.IronBabylon
                     return FinishToken(TT["backQuote"]);
 
                 case 48:
-                    var next = Input[State.Position + 1];
-
-                    if (next == 120 || next == 98)
-                    {
-                        return ReadRadixNumber(16);
-                    }
-
-                    if (next == 111 || next == 79)
-                    {
-                        return ReadRadixNumber(8);
-                    }
-
-                    if (next == 98 || next == 66)
-                    {
-                        return ReadRadixNumber(2);
-                    }
-
-                    break;
-
                 case 49:
                 case 50:
                 case 51:
@@ -558,6 +554,27 @@ namespace ModernDev.IronBabylon
                 case 55:
                 case 56:
                 case 57:
+                    if (code == 48)
+                    {
+                        var next = Input[State.Position + 1];
+
+                        if (next == 120 || next == 98)
+                        {
+                            return ReadRadixNumber(16);
+                        }
+
+                        if (next == 111 || next == 79)
+                        {
+                            return ReadRadixNumber(8);
+                        }
+
+                        if (next == 98 || next == 66)
+                        {
+                            return ReadRadixNumber(2);
+                        }
+                    }
+
+
                     return ReadNumber(false);
 
                 case 34:
@@ -739,7 +756,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Read an integer, octal integer, or floating-point number.
         /// </summary>
-        public TokenType ReadNumber(bool startsWithDot)
+        private TokenType ReadNumber(bool startsWithDot)
         {
             var start = State.Position;
             var isFloat = false;
@@ -750,14 +767,27 @@ namespace ModernDev.IronBabylon
                 Raise(start, "Invalid number");
             }
 
-            var next = State.Position < Input.Length ? Input[State.Position] : int.MaxValue;
+            int? next = null;
+
+            if (State.Position < Input.Length)
+            {
+                next = Input[State.Position];
+            }
 
             if (next == 46)
             {
                 ++State.Position;
                 ReadInt(10);
                 isFloat = true;
-                next = Input[State.Position];
+
+                if (State.Position < Input.Length)
+                {
+                    next = Input[State.Position];
+                }
+                else
+                {
+                    next = null;
+                }
             }
 
             if (next == 69 || next == 101)
@@ -787,7 +817,7 @@ namespace ModernDev.IronBabylon
 
             if (isFloat)
             {
-                val = float.Parse(str);
+                val = float.Parse(str, NumberStyles.Any, CultureInfo.InvariantCulture);
             } else if (!octal || str.Length == 1)
             {
                 val = ToInt32(str, 10);
