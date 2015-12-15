@@ -81,8 +81,13 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Test whether a given character code starts an identifier.
         /// </summary>
-        public static bool IsIdentifierStart(int code)
+        public static bool IsIdentifierStart(int? code)
         {
+            if (!code.ToBool())
+            {
+                return false; // TODO:
+            }
+
             if (code < 65)
             {
                 return code == 36;
@@ -108,14 +113,20 @@ namespace ModernDev.IronBabylon
                 return code >= 0xaa && NonASCIIidentifierStart.IsMatch(ToChar(code).ToString());
             }
 
-            return IsInAstralSet(code, AstralIdentifierStartCodes);
+            // ReSharper disable once PossibleInvalidOperationException
+            return IsInAstralSet((int) code, AstralIdentifierStartCodes);
         }
 
         /// <summary>
         /// Test whether a given character is part of an identifier.
         /// </summary>
-        public static bool IsIdentifierChar(int code)
+        public static bool IsIdentifierChar(int? code)
         {
+            if (!code.ToBool())
+            {
+                return false; // TODO:
+            }
+
             if (code < 48)
             {
                 return code == 36;
@@ -151,7 +162,8 @@ namespace ModernDev.IronBabylon
                 return code >= 0xaa && NonASCIIidentifier.IsMatch(ToChar(code).ToString());
             }
 
-            return IsInAstralSet(code, AstralIdentifierStartCodes) || IsInAstralSet(code, AstralIdentifierCodes);
+            // ReSharper disable once PossibleInvalidOperationException
+            return IsInAstralSet((int) code, AstralIdentifierStartCodes) || IsInAstralSet((int) code, AstralIdentifierCodes);
         }
 
         public static bool IsNewLine(int code) => code == 10 || code == 13 || code == 0x2028 || code == 0x2029;
