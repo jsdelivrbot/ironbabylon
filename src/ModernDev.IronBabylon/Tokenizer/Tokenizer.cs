@@ -168,7 +168,7 @@ namespace ModernDev.IronBabylon
                 Type = block ? "CommentBlock" : "CommentLine",
                 Value = text,
                 End = end,
-                Location = new SourceLocation(startLoc, endLoc)
+                Loc = new SourceLocation(startLoc, endLoc)
             };
 
 
@@ -682,7 +682,7 @@ namespace ModernDev.IronBabylon
 
             for (int i = 0, e = len ?? int.MaxValue; i < e; ++i)
             {
-                var code = Input[State.Position];
+                var code = State.Position < Input.Length ? Input[State.Position] : int.MaxValue;
                 int val;
 
                 if (code >= 97)
@@ -750,7 +750,7 @@ namespace ModernDev.IronBabylon
                 Raise(start, "Invalid number");
             }
 
-            var next = Input[State.Position];
+            var next = State.Position < Input.Length ? Input[State.Position] : int.MaxValue;
 
             if (next == 46)
             {
