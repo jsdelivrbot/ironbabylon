@@ -9,9 +9,9 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Convert existing expression atom to assignable pattern if possible.
         /// </summary>
-        public Node ToAssignable(Node node, bool isBinding = false)
+        private Node ToAssignable(Node node, bool isBinding = false)
         {
-            if (node != null)
+            if (node)
             {
                 switch (node.Type)
                 {
@@ -98,7 +98,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Convert list of expression atoms to binding list.
         /// </summary>
-        public List<Node> ToAssignableList(List<Node> exprList, bool isBinding)
+        private List<Node> ToAssignableList(List<Node> exprList, bool isBinding)
         {
             var end = exprList.Count;
 
@@ -134,7 +134,7 @@ namespace ModernDev.IronBabylon
             {
                 var elt = exprList[i];
 
-                if (elt != null)
+                if (elt)
                 {
                     ToAssignable(elt, isBinding);
                 }
@@ -146,7 +146,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parses spread element.
         /// </summary>
-        public Node ParseSpread(ref int? refShorthandDefaultPos)
+        private Node ParseSpread(ref int? refShorthandDefaultPos)
         {
             var node = StartNode();
 
@@ -157,7 +157,7 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, "SpreadElement");
         }
 
-        public Node ParseRest()
+        private Node ParseRest()
         {
             var node = StartNode();
 
@@ -167,15 +167,15 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, "RestElement");
         }
 
-        public bool ShouldAllowYieldIdentifier
+        private bool ShouldAllowYieldIdentifier
             => Match(TT["_yield"]) && !State.Strict && !State.InGenerator;
 
-        public Node ParseBindingIdentifier() => ParseIdentifier(ShouldAllowYieldIdentifier);
+        private Node ParseBindingIdentifier() => ParseIdentifier(ShouldAllowYieldIdentifier);
 
         /// <summary>
         /// Parses lvalue (assignable) atom.
         /// </summary>
-        public Node ParseBindingAtom()
+        private Node ParseBindingAtom()
         {
             if (State.Type == TT["_yield"] || State.Type == TT["name"])
             {
@@ -192,6 +192,7 @@ namespace ModernDev.IronBabylon
                 var node = StartNode();
 
                 Next();
+
                 node.Elements = ParseBindingList(TT["bracketR"], true, true);
 
                 return FinishNode(node, "ArrayPattern");
@@ -206,7 +207,7 @@ namespace ModernDev.IronBabylon
             return null;
         }
 
-        public List<Node> ParseBindingList(TokenType close, bool allowEmpty, bool allowTrailingComma)
+        private List<Node> ParseBindingList(TokenType close, bool allowEmpty, bool allowTrailingComma)
         {
             var elts = new List<Node>();
             var first = true;
@@ -234,6 +235,7 @@ namespace ModernDev.IronBabylon
                 {
                     elts.Add(ParseAssignableListItemTypes(ParseRest()));
                     Expect(close);
+
                     break;
                 }
                 else
@@ -251,7 +253,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parses assignment pattern around given atom if possible.
         /// </summary>
-        public Node ParseMaybeDefault(int? startPos = null, Position startLoc = null, Node left = null)
+        private Node ParseMaybeDefault(int? startPos = null, Position startLoc = null, Node left = null)
         {
             startLoc = startLoc ?? State.StartLoc;
             startPos = startPos ?? State.Start;
@@ -263,6 +265,7 @@ namespace ModernDev.IronBabylon
             }
 
             var node = StartNodeAt((int) startPos, startLoc);
+
             node.Left = left;
             node.Right = ParseMaybeAssign(false, ref _nullRef);
 
@@ -354,7 +357,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Verify that a node is an lval — something that can be assigned to.
         /// </summary>
-        public void CheckLVal(Node expr, bool isBinding = false, Dictionary<string, bool> checkClashes = null)
+        private void CheckLVal(Node expr, bool isBinding = false, IDictionary<string, bool> checkClashes = null)
         {
             while (true)
             {
