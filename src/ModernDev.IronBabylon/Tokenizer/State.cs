@@ -13,7 +13,7 @@ namespace ModernDev.IronBabylon
 
         public State(ParserOptions options, string input)
         {
-            Strict = options.StrictMode != false && options.SourceType == "module";
+            Strict = options.StrictMode && options.SourceType == "module";
             Input = input;
             PotentialArrowAt = -1;
             InMethod = InFunction = InGenerator = InAsync = false;
@@ -52,7 +52,7 @@ namespace ModernDev.IronBabylon
 
         public bool Strict { get; set; }
 
-        public string Input { get; set; }
+        private string Input { get; }
 
         /// <summary>
         /// Used to signify the start of a potential arrow function
@@ -78,18 +78,18 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Token store.
         /// </summary>
-        public List<object> Tokens { get; set; }
+        public List<object> Tokens { get; private set; }
 
         /// <summary>
         /// Comment store.
         /// </summary>
-        public List<Node> Comments { get; set; }
+        public List<Node> Comments { get; private set; }
 
         public List<Node> TrailingComments { get; set; }
 
         public List<Node> LeadingComments { get; set; }
 
-        public List<Node> CommentStack { get; set; }
+        public List<Node> CommentStack { get; private set; }
 
         public int Position { get; set; }
 
@@ -126,7 +126,7 @@ namespace ModernDev.IronBabylon
         /// context to predict whether a regular expression is allowed in a
         /// given position.
         /// </summary>
-        public List<TokenContext> Context { get; set; }
+        public List<TokenContext> Context { get; private set; }
 
         public bool ExprAllowed { get; set; }
 
