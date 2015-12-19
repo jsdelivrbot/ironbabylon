@@ -30,9 +30,9 @@ namespace ModernDev.IronBabylon
             node.Extra.Add(key, val);
         }
 
-        private bool IsRelational(object op) => Match(TT["relational"]) && State.Value == op;
+        private bool IsRelational(string op) => Match(TT["relational"]) && (string) State.Value == op;
 
-        private void ExpectRelational(object op)
+        private void ExpectRelational(string op)
         {
             if (IsRelational(op))
             {
@@ -47,17 +47,17 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Tests whether parsed token is a contextual keyword.
         /// </summary>
-        private bool IsContextual(object name) => Match(TT["name"]) && State.Value == name;
+        private bool IsContextual(string name) => Match(TT["name"]) && (string) State.Value == name;
 
         /// <summary>
         /// Consumes contextual keyword if possible.
         /// </summary>
-        private bool EatContextual(object name) => State.Value == name && Eat(TT["name"]);
+        private bool EatContextual(string name) => (string) State.Value == name && Eat(TT["name"]);
 
         /// <summary>
         /// Asserts that following token is given contextual keyword.
         /// </summary>
-        private void ExpectContextual(object name)
+        private void ExpectContextual(string name)
         {
             if (!EatContextual(name))
             {

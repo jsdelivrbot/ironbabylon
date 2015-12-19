@@ -8,7 +8,7 @@ namespace ModernDev.IronBabylon
     {
         public static T As<T>(this object @this) => (T) @this;
 
-        public static string Slice(this string source, int start, int end)
+        /*public static string Slice(this string source, int start, int end)
         {
             if (end < 0)
             {
@@ -18,6 +18,23 @@ namespace ModernDev.IronBabylon
             var len = end - start;
 
             return source.Substring(start, len);
+        }*/
+
+        public static string Slice(this string source, int start, int end)
+        {
+            if (start < 0)
+            {
+                start = source.Length + start;
+            }
+
+            if (end < 0)
+            {
+                end = source.Length - end;
+            }
+
+            var len = end - start;
+
+            return start >= source.Length ? string.Empty : source.Substring(start, len);
         }
 
         public static string Slice(this string source, int start) => source.Slice(start, source.Length - 1);
