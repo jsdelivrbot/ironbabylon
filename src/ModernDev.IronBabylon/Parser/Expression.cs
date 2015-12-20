@@ -984,7 +984,7 @@ namespace ModernDev.IronBabylon
                 prop.Method = false;
                 prop.Shorthand = false;
 
-                if (isPattern || refShorthandDefaultPos.ToBool())
+                if (isPattern || refShorthandDefaultPos.HasValue)
                 {
                     startPos = State.Start;
                     startLoc = State.StartLoc;
@@ -1068,8 +1068,8 @@ namespace ModernDev.IronBabylon
             }
 
             if (!prop.Computed && prop.Key.As<Node>().Type == "Identifier" &&
-                (prop.Name as string == "get" || prop.Name as string == "set") &&
-                (!Match(TT["comma"]) && !Match(TT["braceR"])))
+                (prop.Key.As<Node>().Name as string == "get" || prop.Key.As<Node>().Name as string == "set") &&
+                !Match(TT["comma"]) && !Match(TT["braceR"]))
             {
                 if (isGenerator || isAsync || isPattern)
                 {
