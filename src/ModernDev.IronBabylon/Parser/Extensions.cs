@@ -89,5 +89,8 @@ namespace ModernDev.IronBabylon
         public static bool ToBool(this int num) => ToBoolean(num);
 
         public static bool ToBool(this int? num) => ToBoolean(num);
+
+        public static bool ToBool(this object obj)
+            => obj is string ? !string.IsNullOrEmpty((string) obj) : ToBoolean(obj);
     }
 }
