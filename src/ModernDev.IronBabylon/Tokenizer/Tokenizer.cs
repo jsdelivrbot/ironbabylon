@@ -402,7 +402,7 @@ namespace ModernDev.IronBabylon
 
             if (next == code)
             {
-                return FinishOp(TT[code == 124 ? "logicalOR" : "logocalAND"], 2);
+                return FinishOp(TT[code == 124 ? "logicalOR" : "logicalAND"], 2);
             }
 
             return next == 61 ? FinishOp(TT["assign"], 2) : FinishOp(TT[code == 124 ? "bitwiseOR" : "bitwiseAND"], 1);
@@ -561,16 +561,16 @@ namespace ModernDev.IronBabylon
                 case 57:
                     if (code == 48)
                     {
-                        var next = Input[State.Position + 1];
+                        var next = State.Position + 1 >= Input.Length ? int.MaxValue : Input[State.Position + 1];
 
-                        if (next == 120 || next == 98)
+                        switch (next)
                         {
-                            return ReadRadixNumber(16);
-                        }
-
-                        if (next == 111 || next == 79)
-                        {
-                            return ReadRadixNumber(8);
+                            case 120:
+                            case 98:
+                                return ReadRadixNumber(16);
+                            case 111:
+                            case 79:
+                                return ReadRadixNumber(8);
                         }
 
                         if (next == 98 || next == 66)
