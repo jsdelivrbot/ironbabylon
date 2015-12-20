@@ -63,7 +63,7 @@ namespace ModernDev.IronBabylon
 
         public bool InGenerator { get; set; }
 
-        public bool InMethod { get; set; }
+        public object InMethod { get; set; }
 
         /// <summary>
         /// Labels in scope.
