@@ -488,7 +488,7 @@ namespace ModernDev.IronBabylon
 
             if (State.Type == TT["_super"])
             {
-                if (!State.InMethod && !Options.AllowSuperOutsideMethod)
+                if (!State.InMethod.ToBool() && !Options.AllowSuperOutsideMethod)
                 {
                     Raise(State.Start, "'super' outside of function or class");
                 }
@@ -502,7 +502,9 @@ namespace ModernDev.IronBabylon
                     Unexpected();
                 }
 
-                if (Match(TT["parenL"]) && /* this.state.inMethod !== "constructor" TODO: && */
+                var o1 = Match(TT["parenL"]);
+
+                if (o1 && State.InMethod is string && (string) State.InMethod != "constructor" &&
                     !Options.AllowSuperOutsideMethod)
                 {
                     Raise(node.Start, "super() outside of class constructor");
@@ -1170,7 +1172,14 @@ namespace ModernDev.IronBabylon
         {
             var oldInMethod = State.InMethod;
 
-            State.InMethod = !string.IsNullOrEmpty(node.Kind) || true; // TODO: maybe InMethod is a string?
+            if (node.Kind.ToBool())
+            {
+                State.InMethod = node.Kind;
+            }
+            else
+            {
+                State.InMethod = true;
+            }
 
             InitFunction(node, isAsync);
             Expect(TT["parenL"]);
