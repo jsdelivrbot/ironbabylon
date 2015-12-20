@@ -29,7 +29,7 @@ namespace ModernDev.IronBabylon
 
             if (end < 0)
             {
-                end = source.Length - end;
+                end = source.Length + end;
             }
 
             var len = end - start;
