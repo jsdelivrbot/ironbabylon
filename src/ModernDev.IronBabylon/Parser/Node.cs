@@ -30,7 +30,7 @@ namespace ModernDev.IronBabylon
         public string SourceType { get; set; }
         public List<Node> Comments { get; set; }
         public List<object> Tokens { get; set; }
-        public List<Node> Decorators { get; set; } = new List<Node>();
+        public List<Node> Decorators { get; set; }
         public object Expression { get; set; } // TODO: bool or Node
         public Node Label { get; set; }
         public object Name { get; set; }
