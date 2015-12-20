@@ -8,18 +8,6 @@ namespace ModernDev.IronBabylon
     {
         public static T As<T>(this object @this) => (T) @this;
 
-        /*public static string Slice(this string source, int start, int end)
-        {
-            if (end < 0)
-            {
-                end = source.Length + end;
-            }
-
-            var len = end - start;
-
-            return source.Substring(start, len);
-        }*/
-
         public static string Slice(this string source, int start, int end)
         {
             if (start < 0)
@@ -38,6 +26,30 @@ namespace ModernDev.IronBabylon
         }
 
         public static string Slice(this string source, int start) => source.Slice(start, source.Length - 1);
+
+        /// <summary>
+        /// Returns the characters in a string beginning at the specified location through the specified number of characters.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="start">Location at which to begin extracting characters.
+        /// If a negative number is given, it is treated as source.Length + start where source.Length is the length of the string
+        /// (for example, if start is -3 it is treated as sourceLength - 3.)</param>
+        /// <param name="length">The number of characters to extract.</param>
+        /// <returns></returns>
+        public static string Substr(this string source, int start, int length)
+        {
+            if (start < 0)
+            {
+                start = source.Length + start;
+            }
+
+            if (length < 0 || length >= source.Length || length > source.Length - start)
+            {
+                length = source.Length - start;
+            }
+
+            return source.Substring(start, length);
+        }
 
         public static T Pop<T>(this IList<T> list)
         {
@@ -92,5 +104,8 @@ namespace ModernDev.IronBabylon
 
         public static bool ToBool(this object obj)
             => obj is string ? !string.IsNullOrEmpty((string) obj) : ToBoolean(obj);
+
+        public static int CharCodeAt(this string source, int position, int defaultReturn = int.MaxValue)
+            => position >= source.Length ? defaultReturn : source[position];
     }
 }
