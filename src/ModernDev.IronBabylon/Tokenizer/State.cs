@@ -3,7 +3,9 @@
 //
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ModernDev.IronBabylon
 {
@@ -153,33 +155,18 @@ namespace ModernDev.IronBabylon
 
         public State Clone(bool skipArrays = false)
         {
-//            var state =  (State) MemberwiseClone();
-//
-//            if (!skipArrays)
-//            {
-//                state.Labels = Labels;
-//                state.Decorators = Decorators;
-//                state.Tokens = Tokens;
-//                state.Comments = Comments;
-//                state.TrailingComments = TrailingComments;
-//                state.LeadingComments = LeadingComments;
-//                state.CommentStack = CommentStack;
-//                state.Context = Context;
-//            }
-//
-//            return state;
-
             var state = new State(_parserOptions, Input);
-            
-            foreach (var prop in typeof(State).GetProperties())
+
+            foreach (var prop in typeof (State).GetProperties().Where(prop => prop.CanWrite))
             {
                 var val = prop.GetValue(this);
-                if ((!skipArrays || prop.Name == "Context") &&
-                    (prop.GetType() == typeof (List<Node>) || prop.GetType() == typeof (List<object>) ||
-                     prop.GetType() == typeof (List<TokenContext>)))
+
+                if ((!skipArrays || prop.Name == "Context") && prop.GetType() == typeof (IList))
                 {
-                    prop.SetValue(state, val);
+                    val = (val as IList<object>)?.ToList();
                 }
+
+                prop.SetValue(state, val);
             }
 
             return state;
