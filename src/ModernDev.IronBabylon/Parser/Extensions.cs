@@ -43,12 +43,22 @@ namespace ModernDev.IronBabylon
                 start = source.Length + start;
             }
 
-            if (length < 0 || length >= source.Length || length > source.Length - start)
+            if (length < 0 || length == 0)
+            {
+                return string.Empty;
+            }
+
+            if (length >= source.Length || length > source.Length - start)
             {
                 length = source.Length - start;
             }
 
             return source.Substring(start, length);
+        }
+
+        public static string Substr(this string source, int start)
+        {
+            return source.Substr(start, source.Length);
         }
 
         public static T Pop<T>(this IList<T> list)
