@@ -502,9 +502,7 @@ namespace ModernDev.IronBabylon
                     Unexpected();
                 }
 
-                var o1 = Match(TT["parenL"]);
-
-                if (o1 && State.InMethod is string && (string) State.InMethod != "constructor" &&
+                if (Match(TT["parenL"]) && State.InMethod is string && (string) State.InMethod != "constructor" &&
                     !Options.AllowSuperOutsideMethod)
                 {
                     Raise(node.Start, "super() outside of class constructor");
@@ -528,10 +526,8 @@ namespace ModernDev.IronBabylon
                 }
 
                 node = StartNode();
-
-                var allowAwait = State.Value as string == "await" && State.InAsync;
-                var allowYield = ShouldAllowYieldIdentifier;
-                var id = ParseIdentifier(allowAwait || allowYield); // TODO: reduce variables count
+                
+                var id = ParseIdentifier((State.Value as string == "await" && State.InAsync) || ShouldAllowYieldIdentifier);
 
                 if (id.Name as string == "await")
                 {
