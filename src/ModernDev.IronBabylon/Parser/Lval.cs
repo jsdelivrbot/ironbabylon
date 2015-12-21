@@ -151,7 +151,7 @@ namespace ModernDev.IronBabylon
             var node = StartNode();
 
             Next();
-            // TODO: 
+
             node.Argument = ParseMaybeAssign(false, ref refShorthandDefaultPos);
 
             return FinishNode(node, "SpreadElement");
