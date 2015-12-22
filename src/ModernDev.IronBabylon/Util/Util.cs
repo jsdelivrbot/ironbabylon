@@ -90,7 +90,7 @@ namespace ModernDev.IronBabylon
         {
             if (!code.ToBool())
             {
-                return false; // TODO:
+                return false;
             }
 
             if (code < 65)
@@ -129,7 +129,7 @@ namespace ModernDev.IronBabylon
         {
             if (!code.ToBool())
             {
-                return false; // TODO:
+                return false;
             }
 
             if (code < 48)
