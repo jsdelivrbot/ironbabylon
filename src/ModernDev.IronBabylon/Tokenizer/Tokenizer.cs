@@ -621,7 +621,7 @@ namespace ModernDev.IronBabylon
 			return null;
 		}
 
-	    private TokenType FinishOp(TokenType type, int size)
+	    protected TokenType FinishOp(TokenType type, int size)
 		{
 			var str = Input.Slice(State.Position, State.Position + size);
 
