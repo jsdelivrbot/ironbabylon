@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -82,7 +81,7 @@ namespace ModernDev.IronBabylon
 
 		protected virtual bool IsKeyword(string word) => Util.IsKeyword(word);
 
-	    protected State Lookahead()
+		protected State Lookahead()
 		{
 			var oldState = State;
 			State = oldState.Clone(true);
@@ -150,10 +149,10 @@ namespace ModernDev.IronBabylon
 			return curContext?.Override != null ? curContext.Override(this) : ReadToken(FullCharCodeAtPos());
 		}
 
-	    protected virtual TokenType ReadToken(int? code)
+		protected virtual TokenType ReadToken(int? code)
 			=> IsIdentifierStart(code) || code == 92 ? ReadWord() : GetTokenFromCode(code ?? int.MaxValue);
 
-	    private int? FullCharCodeAtPos()
+		private int? FullCharCodeAtPos()
 		{
 			int? code = null;
 			int? next = null;
@@ -181,7 +180,7 @@ namespace ModernDev.IronBabylon
 			return null;
 		}
 
-	    private void PushComment(bool block, string text, int start, int end, Position startLoc, Position endLoc)
+		private void PushComment(bool block, string text, int start, int end, Position startLoc, Position endLoc)
 		{
 			var comment = new Node(start, startLoc)
 			{
@@ -201,7 +200,7 @@ namespace ModernDev.IronBabylon
 			AddComment(comment);
 		}
 
-	    private void SkipBlockComment()
+		private void SkipBlockComment()
 		{
 			var startLoc = State.CurrentPosition;
 			var start = State.Position;
@@ -223,7 +222,7 @@ namespace ModernDev.IronBabylon
 			PushComment(true, Input.Slice(start + 2, end), start, State.Position, startLoc, State.CurrentPosition);
 		}
 
-	    protected void SkipLineComment(int startSkip)
+		protected void SkipLineComment(int startSkip)
 		{
 			var start = State.Position;
 			var startLoc = State.CurrentPosition;
@@ -337,16 +336,16 @@ namespace ModernDev.IronBabylon
 			return null;
 		}
 
-	    private TokenType ReadTokenDot()
+		private TokenType ReadTokenDot()
 		{
-			var next = Input[State.Position + 1];
+			var next = Input.CharCodeAt(State.Position + 1);
 
 			if (next >= 48 && next <= 57)
 			{
 				return ReadNumber(true);
 			}
 
-			var next2 = Input[State.Position + 2];
+			var next2 = Input.CharCodeAt(State.Position + 2);
 
 			if (next == 46 && next2 == 46)
 			{
@@ -360,7 +359,7 @@ namespace ModernDev.IronBabylon
 			return FinishToken(TT["dot"]);
 		}
 
-	    private TokenType ReadTokenSlash()
+		private TokenType ReadTokenSlash()
 		{
 			if (State.ExprAllowed)
 			{
@@ -369,21 +368,21 @@ namespace ModernDev.IronBabylon
 				return ReadRegexp();
 			}
 
-			var next = Input[State.Position + 1];
+			var next = Input.CharCodeAt(State.Position + 1);
 
 			return next == 61 ? FinishOp(TT["assign"], 2) : FinishOp(TT["slash"], 1);
 		}
 
-	    private TokenType ReadTokenMultModulo(int code)
+		private TokenType ReadTokenMultModulo(int code)
 		{
 			var type = TT[code == 42 ? "star" : "modulo"];
 			var width = 1;
-			var next = Input[State.Position + 1];
+			var next = Input.CharCodeAt(State.Position + 1);
 
 			if (next == 42)
 			{
 				width++;
-				next = Input[State.Position + 2];
+				next = Input.CharCodeAt(State.Position + 2);
 				type = TT["exponent"];
 			}
 
@@ -396,9 +395,9 @@ namespace ModernDev.IronBabylon
 			return FinishOp(type, width);
 		}
 
-	    private TokenType ReadTokenPipeAmp(int code)
+		private TokenType ReadTokenPipeAmp(int code)
 		{
-			var next = Input[State.Position + 1];
+			var next = Input.CharCodeAt(State.Position + 1);
 
 			if (next == code)
 			{
@@ -408,14 +407,14 @@ namespace ModernDev.IronBabylon
 			return next == 61 ? FinishOp(TT["assign"], 2) : FinishOp(TT[code == 124 ? "bitwiseOR" : "bitwiseAND"], 1);
 		}
 
-	    private TokenType ReadTokenCaret()
+		private TokenType ReadTokenCaret()
 		{
-			var next = Input[State.Position + 1];
+			var next = Input.CharCodeAt(State.Position + 1);
 
 			return next == 61 ? FinishOp(TT["assign"], 2) : FinishOp(TT["bitwiseXOR"], 1);
 		}
 
-	    private TokenType ReadTokenPlusMin(int code)
+		private TokenType ReadTokenPlusMin(int code)
 		{
 			var next = Input.CharCodeAt(State.Position + 1);
 
@@ -436,19 +435,19 @@ namespace ModernDev.IronBabylon
 			return next == 61 ? FinishOp(TT["assign"], 2) : FinishOp(TT["plusMin"], 1);
 		}
 
-	    private TokenType ReadTokenLtGt(int code)
+		private TokenType ReadTokenLtGt(int code)
 		{
-			var next = Input[State.Position + 1];
+			var next = Input.CharCodeAt(State.Position + 1);
 			var size = 1;
 
 			if (next == code)
 			{
-				size = code == 62 && Input[State.Position + 2] == 62 ? 3 : 2;
+				size = code == 62 && Input.CharCodeAt(State.Position + 2) == 62 ? 3 : 2;
 
-				return Input[State.Position + size] == 61 ? FinishOp(TT["assign"], size + 1) : FinishOp(TT["bitShift"], size);
+				return Input.CharCodeAt(State.Position + size) == 61 ? FinishOp(TT["assign"], size + 1) : FinishOp(TT["bitShift"], size);
 			}
 
-			if (next == 33 && code == 60 && Input[State.Position + 2] == 45 && Input[State.Position + 3] == 45)
+			if (next == 33 && code == 60 && Input.CharCodeAt(State.Position + 2) == 45 && Input.CharCodeAt(State.Position + 3) == 45)
 			{
 				if (InModule)
 				{
@@ -463,19 +462,19 @@ namespace ModernDev.IronBabylon
 
 			if (next == 61)
 			{
-				size = Input[State.Position + 2] == 61 ? 3 : 2;
+				size = Input.CharCodeAt(State.Position + 2) == 61 ? 3 : 2;
 			}
 
 			return FinishOp(TT["relational"], size);
 		}
 
-	    private TokenType ReadTokenEqExcl(int code)
+		private TokenType ReadTokenEqExcl(int code)
 		{
-			var next = Input[State.Position + 1];
+			var next = Input.CharCodeAt(State.Position + 1);
 
 			if (next == 61)
 			{
-				return FinishOp(TT["equality"], Input[State.Position + 2] == 61 ? 3 : 2);
+				return FinishOp(TT["equality"], Input.CharCodeAt(State.Position + 2) == 61 ? 3 : 2);
 			}
 
 			if (code == 61 && next == 62)
@@ -488,7 +487,7 @@ namespace ModernDev.IronBabylon
 			return FinishOp(TT[code == 61 ? "eq" : "prefix"], 1);
 		}
 
-	    protected TokenType GetTokenFromCode(int code)
+		protected TokenType GetTokenFromCode(int code)
 		{
 			switch (code)
 			{
@@ -528,7 +527,7 @@ namespace ModernDev.IronBabylon
 					return FinishToken(TT["braceR"]);
 
 				case 58:
-					if (Input[State.Position + 1] == 58)
+					if (Input.CharCodeAt(State.Position + 1) == 58)
 					{
 						return FinishOp(TT["doubleColon"], 2);
 					}
@@ -621,7 +620,7 @@ namespace ModernDev.IronBabylon
 			return null;
 		}
 
-	    protected TokenType FinishOp(TokenType type, int size)
+		protected TokenType FinishOp(TokenType type, int size)
 		{
 			var str = Input.Slice(State.Position, State.Position + size);
 
@@ -630,7 +629,7 @@ namespace ModernDev.IronBabylon
 			return FinishToken(type, str);
 		}
 
-	    private TokenType ReadRegexp()
+		private TokenType ReadRegexp()
 		{
 			var start = State.Position;
 			var escaped = false;
@@ -704,7 +703,7 @@ namespace ModernDev.IronBabylon
 
 			for (int i = 0, e = len ?? int.MaxValue; i < e; ++i)
 			{
-				var code = State.Position < Input.Length ? Input[State.Position] : int.MaxValue;
+				var code = Input.CharCodeAt(State.Position);
 				int val;
 
 				if (code >= 97)
@@ -739,7 +738,7 @@ namespace ModernDev.IronBabylon
 			return total;
 		}
 
-	    private TokenType ReadRadixNumber(int radix)
+		private TokenType ReadRadixNumber(int radix)
 		{
 			State.Position += 2;
 
@@ -765,7 +764,7 @@ namespace ModernDev.IronBabylon
 		{
 			var start = State.Position;
 			var isFloat = false;
-			var octal = Input[State.Position] == 48;
+			var octal = Input.CharCodeAt(State.Position) == 48;
 
 			if (!startsWithDot && ReadInt(10) == null)
 			{
@@ -776,7 +775,7 @@ namespace ModernDev.IronBabylon
 
 			if (State.Position < Input.Length)
 			{
-				next = Input[State.Position];
+				next = Input.CharCodeAt(State.Position);
 			}
 
 			if (next == 46)
@@ -787,7 +786,7 @@ namespace ModernDev.IronBabylon
 
 				if (State.Position < Input.Length)
 				{
-					next = Input[State.Position];
+					next = Input.CharCodeAt(State.Position);
 				}
 				else
 				{
@@ -797,7 +796,7 @@ namespace ModernDev.IronBabylon
 
 			if (next == 69 || next == 101)
 			{
-				next = Input[++State.Position];
+				next = Input.CharCodeAt(++State.Position);
 
 				if (next == 43 || next == 45)
 				{
@@ -843,7 +842,7 @@ namespace ModernDev.IronBabylon
 		/// </summary>
 		private int ReadCodePoint()
 		{
-			var ch = Input[State.Position];
+			var ch = Input.CharCodeAt(State.Position);
 			int code;
 
 			if (ch == 123)
@@ -866,7 +865,7 @@ namespace ModernDev.IronBabylon
 			return code;
 		}
 
-	    private TokenType ReadString(int quote)
+		private TokenType ReadString(int quote)
 		{
 			var outt = "";
 			var chunkStart = ++State.Position;
@@ -878,7 +877,7 @@ namespace ModernDev.IronBabylon
 					Raise(State.Start, "Unterminated string constant");
 				}
 
-				var ch = Input[State.Position];
+				var ch = Input.CharCodeAt(State.Position);
 
 				if (ch == quote)
 				{
@@ -920,9 +919,9 @@ namespace ModernDev.IronBabylon
 					Raise(State.Start, "Unterminated template");
 				}
 
-				int ch = Input[State.Position];
+				int ch = Input.CharCodeAt(State.Position);
 
-				if (ch == 96 || ch == 36 && Input[State.Position + 1] == 123)
+				if (ch == 96 || ch == 36 && Input.CharCodeAt(State.Position + 1) == 123)
 				{
 					if (State.Position == State.Start && Match(TT["template"]))
 					{
@@ -957,7 +956,7 @@ namespace ModernDev.IronBabylon
 					{
 						case 10:
 						case 13:
-							if (ch == 13 && Input[State.Position] == 10)
+							if (ch == 13 && Input.CharCodeAt(State.Position) == 10)
 							{
 								++State.Position;
 							}
@@ -986,7 +985,7 @@ namespace ModernDev.IronBabylon
 		/// </summary>
 		private string ReadEscapedChar(bool inTemplate )
 		{
-			int ch = Input[++State.Position];
+			int ch = Input.CharCodeAt(++State.Position);
 
 			++State.Position;
 
@@ -1018,7 +1017,7 @@ namespace ModernDev.IronBabylon
 
 				case 10:
 				case 13:
-					if (ch == 13 && Input[State.Position] == 10)
+					if (ch == 13 && Input.CharCodeAt(State.Position) == 10)
 					{
 						++State.Position;
 					}
@@ -1073,9 +1072,9 @@ namespace ModernDev.IronBabylon
 			if (n == null)
 			{
 				Raise(codePos, "Bad character escape sequence");
+				return 0;
 			}
 
-			Debug.Assert(n != null, "n != null");
 			return (int) n;
 		}
 
@@ -1184,7 +1183,7 @@ namespace ModernDev.IronBabylon
 			return !State.ExprAllowed;
 		}
 
-	    protected virtual void UpdateContext(TokenType prevType)
+		protected virtual void UpdateContext(TokenType prevType)
 		{
 			var type = State.Type;
 			var update = type.UpdateContext;
