@@ -9,7 +9,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Convert existing expression atom to assignable pattern if possible.
         /// </summary>
-        private Node ToAssignableRegular(Node node, bool isBinding = false) // TODO:
+        private Node ToAssignableRegular(Node node, bool isBinding = false)
         {
             if (node)
             {
@@ -98,7 +98,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Convert list of expression atoms to binding list.
         /// </summary>
-        private List<Node> ToAssignableListRegular(List<Node> exprList, bool isBinding) // TODO:
+        private List<Node> ToAssignableListRegular(List<Node> exprList, bool isBinding)
         {
             var end = exprList.Count;
 
@@ -273,7 +273,6 @@ namespace ModernDev.IronBabylon
         }
 
         private void CheckLValRegular(Node expr, bool isBinding = false, Dictionary<string, bool> checkClashes = null)
-            // TODO:
         {
             switch (expr.Type)
             {
@@ -348,88 +347,5 @@ namespace ModernDev.IronBabylon
                     break;
             }
         }
-
-        /*/// <summary>
-        /// Verify that a node is an lval — something that can be assigned to.
-        /// </summary>
-        private void CheckLVal(Node expr, bool isBinding = false, IDictionary<string, bool> checkClashes = null)
-        {
-            while (true)
-            {
-                switch (expr.Type)
-                {
-                    case "Identifier":
-                        if (State.Strict &&
-                            (ReservedWords["strictBind"](expr.Name as string) ||
-                             ReservedWords["strict"](expr.Name as string)))
-                        {
-                            Raise(expr.Start,
-                                (isBinding ? "Binding " : "Assigning to ") + expr.Name + " in strict mode");
-                        }
-
-                        if (checkClashes != null)
-                        {
-                            var key = $"_{expr.Name}";
-
-                            if (checkClashes.ContainsKey(key) && checkClashes[key])
-                            {
-                                Raise(expr.Start, "Argument name clash in strict mode");
-                            }
-                            else
-                            {
-                                checkClashes[key] = true;
-                            }
-                        }
-
-                        break;
-
-                    case "MemberExpression":
-                        if (isBinding)
-                        {
-                            Raise(expr.Start, "Binding member expression");
-                        }
-
-                        break;
-
-                    case "ObjectPattern":
-                        foreach (var propNode in expr.Properties)
-                        {
-                            object prop = propNode;
-
-                            if (propNode.Type == "ObjectProperty")
-                            {
-                                prop = propNode.Value;
-                            }
-
-                            CheckLVal((Node) prop, isBinding, checkClashes);
-                        }
-
-                        break;
-
-                    case "ArrayPattern":
-                        foreach (var elem in expr.Elements.Where(el => el != null))
-                        {
-                            CheckLVal(elem, isBinding, checkClashes);
-                        }
-
-                        break;
-
-                    case "AssignmentPattern":
-                        expr = expr.Left;
-                        continue;
-
-                    case "RestProperty":
-                    case "RestElement":
-                        expr = expr.Argument;
-                        continue;
-
-                    default:
-                        Raise(expr.Start, (isBinding ? "Binding" : "Assigning to") + " rvalue");
-
-                        break;
-                }
-                break;
-            }
-        }*/
     }
 }
