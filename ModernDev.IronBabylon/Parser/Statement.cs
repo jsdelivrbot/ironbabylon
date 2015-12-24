@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using static ModernDev.IronBabylon.Util;
 
@@ -31,17 +30,16 @@ namespace ModernDev.IronBabylon
 
         private Node StmtToDirective(Node stmt)
         {
-            var expr = stmt.Expression as Node;
-            Debug.Assert(expr != null, "expr not null");
-            var directiveLiteral = StartNodeAt(expr.Start, expr.Loc.Start);
+            var expr = (Node) stmt.Expression;
+            var directiveLiteral = StartNodeAt(expr?.Start ?? 0, expr?.Loc.Start);
             var directive = StartNodeAt(stmt.Start, stmt.Loc.Start);
-            var raw = Input.Slice(expr.Start, expr.End);
+            var raw = Input.Slice(expr?.Start ?? 0, expr?.End ?? 0);
             var val = directive.Value = raw.Slice(1, -1);
 
             AddExtra(directiveLiteral, "raw", raw);
             AddExtra(directiveLiteral, "rawValue", val);
 
-            directive.Value = FinishNodeAt(directiveLiteral, "DirectiveLiteral", expr.End, expr.Loc.End);
+            directive.Value = FinishNodeAt(directiveLiteral, "DirectiveLiteral", expr?.End ?? 0, expr?.Loc.End);
 
             return FinishNodeAt(directive, "Directive", stmt.End, stmt.Loc.End);
         }
@@ -54,7 +52,7 @@ namespace ModernDev.IronBabylon
         /// `if (foo) /blah/.exec(foo)`, where looking at the previous token
         /// does not help.
         /// </summary>
-        private Node ParseStatementRegular(bool declaration, bool topLevel = false) // TODO:
+        private Node ParseStatementRegular(bool declaration, bool topLevel = false)
         {
             if (Match(TT["at"]))
             {
@@ -181,7 +179,7 @@ namespace ModernDev.IronBabylon
                 }
             }
 
-            var maybeName = State.Value;
+            var maybeName = State.Value as string;
             var expr = ParseExpression(false, ref _nullRef);
 
             if (startType == TT["name"] && expr.Type == "Identifier" && Eat(TT["colon"]))
@@ -574,9 +572,9 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, "EmptyStatement");
         }
 
-        private Node ParseLabelStatement(Node node, object /* TODO: string*/ maybeName, Node expr)
+        private Node ParseLabelStatement(Node node, string maybeName, Node expr)
         {
-            State.Labels.Where(label => label.Name as string == (string) maybeName)
+            State.Labels.Where(label => label.Name as string == maybeName)
                 .ToList()
                 .ForEach(label => Raise(expr.Start, $"Label '{maybeName}' is already declared"));
 
@@ -599,7 +597,7 @@ namespace ModernDev.IronBabylon
 
             State.Labels.Add(new Node
             {
-                Name = (string) maybeName,
+                Name = maybeName,
                 Kind = kind,
                 StatementStart = State.Start
             });
@@ -613,7 +611,7 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, "LabeledStatement");
         }
 
-        private Node ParseExpressionStatementRegular(Node node, Node expr) // TODO:
+        private Node ParseExpressionStatementRegular(Node node, Node expr)
         {
             node.Expression = expr;
 
@@ -734,7 +732,7 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, type);
         }
 
-        private Node ParseVar(Node node, bool isFor, TokenType kind)
+        private void ParseVar(Node node, bool isFor, TokenType kind)
         {
             node.Declarations = new List<Node>();
             node.Kind = kind.Keyword;
@@ -770,10 +768,10 @@ namespace ModernDev.IronBabylon
                 }
             }
 
-            return node;
+            // return node;
         }
 
-        private void ParseVarHeadRegular(Node decl) // TODO:
+        private void ParseVarHeadRegular(Node decl)
         {
             decl.Id = ParseBindingAtom();
 
@@ -816,11 +814,11 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, isStatement ? "FunctionDeclaration" : "FunctionExpression");
         }
 
-        private void ParseFunctionParamsRegular(Node node) // TODO:
+        private void ParseFunctionParamsRegular(Node node)
         {
             Expect(TT["parenL"]);
 
-            node.Params = ParseBindingList(TT["parenR"], false, true).Cast<object>().ToList(); // TODO: 
+            node.Params = ParseBindingList(TT["parenR"], false, true).Cast<object>().ToList();
         }
 
         /// <summary>
@@ -1029,7 +1027,7 @@ namespace ModernDev.IronBabylon
             State.Strict = oldStrict;
         }
 
-        private Node ParseClassPropertyRegular(Node node) // TODO:
+        private Node ParseClassPropertyRegular(Node node)
         {
             if (Match(TT["eq"]))
             {
@@ -1047,13 +1045,13 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, "ClassProperty");
         }
 
-        private void ParseClassMethodRegular(Node classBody, Node method, bool isGenerator, bool isAsync) // TODO:
+        private void ParseClassMethodRegular(Node classBody, Node method, bool isGenerator, bool isAsync)
         {
             ParseMethod(method, isGenerator, isAsync);
             ((List<Node>) classBody.Body).Add(FinishNode(method, "ClassMethod"));
         }
 
-        private void ParseClassIdRegular(Node node, bool isStatement, bool optionalId = false) // TODO:
+        private void ParseClassIdRegular(Node node, bool isStatement, bool optionalId = false)
         {
             if (Match(TT["name"]))
             {
@@ -1072,7 +1070,7 @@ namespace ModernDev.IronBabylon
             }
         }
 
-        private void ParseClassSuperRegular(Node node) // TODO:
+        private void ParseClassSuperRegular(Node node)
         {
             node.SuperClass = Eat(TT["_extends"]) ? ParseExprSubscripts(ref _nullRef) : null;
         }
@@ -1080,7 +1078,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parses module export declaration.
         /// </summary>
-        private Node ParseExportRegular(Node node) // TODO:
+        private Node ParseExportRegular(Node node)
         {
             Next();
 
@@ -1181,7 +1179,7 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, "ExportNamedDeclaration");
         }
 
-        private Node ParseExportDeclarationRegular(Node node) => ParseStatement(true); // TODO:
+        private Node ParseExportDeclarationRegular() => ParseStatement(true);
 
         private bool IsExportDefaultSpecifier
         {
@@ -1247,7 +1245,7 @@ namespace ModernDev.IronBabylon
             Semicolon();
         }
 
-        private bool ShouldParseExportDeclarationRegular => IsContextual("async"); // TODO:
+        private bool ShouldParseExportDeclarationRegular => IsContextual("async");
 
         private void CheckExport(Node node)
         {
@@ -1350,7 +1348,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parses a comma-separated list of module imports.
         /// </summary>
-        private void ParseImportSpecifiersRegular(Node node) // TODO:
+        private void ParseImportSpecifiersRegular(Node node)
         {
             var first = true;
             
