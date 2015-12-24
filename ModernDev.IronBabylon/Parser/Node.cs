@@ -57,7 +57,7 @@ namespace ModernDev.IronBabylon
         public Node Id { get; set; }
         public bool Async { get; set; }
         public bool Generator { get; set; }
-        public object Params { get; set; }
+        public List<object> Params { get; set; }
         public Node SuperClass { get; set; }
         public bool Static { get; set; }
         public bool Computed { get; set; }
@@ -96,7 +96,7 @@ namespace ModernDev.IronBabylon
         public List<Node> CallProperties { get; set; }
         public List<Node> Indexers { get; set; }
         public Node Qualification { get; set; }
-        public List<TokenType> Types { get; set; }
+        public List<object> Types { get; set; } // TODO:
         public object ElementType { get; set; }
 
         #region Flow-related properties

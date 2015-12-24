@@ -360,8 +360,10 @@ namespace ModernDev.IronBabylon
                     node.Object = b;
                     node.Callee = ParseNoCallExpr();
 
-                    return ParseSubscripts(FinishNode(node, "BindExpression"), startPos, startLoc, noCalls);
-                } else if (Eat(TT["dot"]))
+                    return ParseSubscripts(FinishNode(node, "BindExpression"), startPos, startLoc);
+                }
+
+                if (Eat(TT["dot"]))
                 {
                     var node = StartNodeAt(startPos, startLoc);
 
@@ -456,9 +458,9 @@ namespace ModernDev.IronBabylon
             return elts;
         }
 
-        private bool ShouldParseAsyncArrow => Match(TT["arrow"]);
+        private bool ShouldParseAsyncArrowRegular => Match(TT["arrow"]); // TODO:
 
-        private Node ParseAsyncArrowFromCallExpression(Node node, Node call)
+        private Node ParseAsyncArrowFromCallExpressionRegular(Node node, Node call) // TODO:
         {
             Expect(TT["arrow"]);
 
@@ -481,7 +483,7 @@ namespace ModernDev.IronBabylon
         /// expression, an expression started by a keyword like `function` or
         /// `new`, or an expression wrapped in punctuation like `()`, `[]`, or `{}`.
         /// </summary>
-        private Node ParseExprAtom(ref int? refShorthandDefaultPos)
+        private Node ParseExprAtomRegular(ref int? refShorthandDefaultPos) // TODO: regular implemention
         {
             Node node;
             var canBeArrow = State.PotentialArrowAt == State.Start;
@@ -732,8 +734,8 @@ namespace ModernDev.IronBabylon
             return val;
         }
 
-        private Node ParseParenAndDistinguishExpression(int? startPos, Position startLoc, bool canBeArrow,
-            bool isAsync = false)
+        private Node ParseParenAndDistinguishExpressionRegular(int? startPos, Position startLoc, bool canBeArrow,
+            bool isAsync = false) // TODO:
         {
             startPos = startPos ?? State.Start;
             startLoc = startLoc ?? State.StartLoc;
@@ -842,10 +844,7 @@ namespace ModernDev.IronBabylon
 
             return val;
         }
-
-        private Node ParseParenItem(Node node, int? startPos = null, Position startLoc = null, bool forceArrow = false)
-            => node;
-
+        
         /// <summary>
         /// New's precedence is slightly tricky. It must allow its argument
         /// to be a `[]` or dot subscript expression, but not a call — at
@@ -1038,8 +1037,8 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, isPattern ? "ObjectPattern" : "ObjectExpression");
         }
 
-        private Node ParseObjPropValue(Node prop, int startPos, Position startLoc, bool isGenerator, bool isAsync,
-            bool isPattern, ref int? refShorthandDefaultPos)
+        private Node ParseObjPropValueRegular(Node prop, int startPos, Position startLoc, bool isGenerator, bool isAsync,
+            bool isPattern, ref int? refShorthandDefaultPos) // TODO:
         {
             if (isGenerator || isAsync || Match(TT["parenL"]))
             {
@@ -1069,7 +1068,7 @@ namespace ModernDev.IronBabylon
                 (prop.Key.As<Node>().Name as string == "get" || prop.Key.As<Node>().Name as string == "set") &&
                 !Match(TT["comma"]) && !Match(TT["braceR"]))
             {
-                if (isGenerator || isAsync || isPattern)
+                if (isPattern)
                 {
                     Unexpected();
                 }
@@ -1180,7 +1179,7 @@ namespace ModernDev.IronBabylon
             InitFunction(node, isAsync);
             Expect(TT["parenL"]);
 
-            node.Params = ParseBindingList(TT["parenR"], false, true);
+            node.Params = ParseBindingList(TT["parenR"], false, true).Cast<object>().ToList(); // TODO:
             node.Generator = isGenerator;
 
             ParseFunctionBody(node);
@@ -1197,7 +1196,7 @@ namespace ModernDev.IronBabylon
         {
             InitFunction(node, isAsync);
 
-            node.Params = ToAssignableList(prms, true);
+            node.Params = ToAssignableList(prms, true).Cast<object>().ToList(); // TODO:
 
             ParseFunctionBody(node, true);
 
@@ -1207,7 +1206,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parse function body and check parameters.
         /// </summary>
-        private void ParseFunctionBody(Node node, bool allowExpression = false)
+        private void ParseFunctionBodyRegular(Node node, bool allowExpression = false) // TODO:
         {
             var isExpression = allowExpression && !Match(TT["braceL"]);
             var oldInAsync = State.InAsync;
@@ -1278,9 +1277,9 @@ namespace ModernDev.IronBabylon
                     CheckLVal(node.Id, true);
                 }
 
-                foreach (var param in (List<Node>) node.Params)
+                foreach (var param in node.Params)
                 {
-                    CheckLVal(param, true, nameHash);
+                    CheckLVal((Node) param, true, nameHash);
                 }
 
                 State.Strict = oldStrict;
@@ -1322,7 +1321,7 @@ namespace ModernDev.IronBabylon
             return elts;
         }
 
-        private Node ParseExprListItem(bool allowEmpty, ref int? refShorthandDefaultPos)
+        private Node ParseExprListItemRegular(bool allowEmpty, ref int? refShorthandDefaultPos) // TODO:
         {
             Node elt;
 

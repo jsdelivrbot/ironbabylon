@@ -9,7 +9,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Convert existing expression atom to assignable pattern if possible.
         /// </summary>
-        private Node ToAssignable(Node node, bool isBinding = false)
+        private Node ToAssignableRegular(Node node, bool isBinding = false) // TODO:
         {
             if (node)
             {
@@ -98,7 +98,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Convert list of expression atoms to binding list.
         /// </summary>
-        private List<Node> ToAssignableList(List<Node> exprList, bool isBinding)
+        private List<Node> ToAssignableListRegular(List<Node> exprList, bool isBinding) // TODO:
         {
             var end = exprList.Count;
 
@@ -272,27 +272,25 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, "AssignmentPattern");
         }
 
-        #region Not optimized version of CheckLVal
-
-        /*
-        public void CheckLVal( Node expr, bool isBinding = false, Dictionary<string, bool> checkClashes = null )
+        private void CheckLValRegular(Node expr, bool isBinding = false, Dictionary<string, bool> checkClashes = null)
+            // TODO:
         {
             switch (expr.Type)
             {
                 case "Identifier":
                     if (State.Strict &&
-                        (Util.ReservedWords["strictBind"](expr.Name) || Util.ReservedWords["strict"](expr.Name)))
+                        (ReservedWords["strictBind"]((string) expr.Name) || ReservedWords["strict"]((string) expr.Name)))
                     {
-                        Raise(expr.Start ?? 0, (isBinding ? "Binding " : "Assigning to ") + expr.Name + " in strict mode");
+                        Raise(expr.Start, (isBinding ? "Binding " : "Assigning to ") + expr.Name + " in strict mode");
                     }
 
                     if (checkClashes != null)
                     {
                         var key = $"_{expr.Name}";
 
-                        if (checkClashes[key])
+                        if (checkClashes.ContainsKey(key) && checkClashes[key])
                         {
-                            Raise(expr.Start ?? 0, "Argument name clash in strict mode");
+                            Raise(expr.Start, "Argument name clash in strict mode");
                         }
                         else
                         {
@@ -305,7 +303,7 @@ namespace ModernDev.IronBabylon
                 case "MemberExpression":
                     if (isBinding)
                     {
-                        Raise(expr.Start ?? 0, "Binding member expression");
+                        Raise(expr.Start, "Binding member expression");
                     }
 
                     break;
@@ -326,7 +324,7 @@ namespace ModernDev.IronBabylon
                     break;
 
                 case "ArrayPattern":
-                    foreach (var elem in expr.Elements.Where(el => el != null))
+                    foreach (var elem in expr.Elements.Where(el => el))
                     {
                         CheckLVal(elem, isBinding, checkClashes);
                     }
@@ -345,16 +343,13 @@ namespace ModernDev.IronBabylon
                     break;
 
                 default:
-                    Raise(expr.Start ?? 0, (isBinding ? "Binding" : "Assigning to") + " rvalue");
+                    Raise(expr.Start, (isBinding ? "Binding" : "Assigning to") + " rvalue");
 
                     break;
             }
         }
-        */
 
-        #endregion
-
-        /// <summary>
+        /*/// <summary>
         /// Verify that a node is an lval — something that can be assigned to.
         /// </summary>
         private void CheckLVal(Node expr, bool isBinding = false, IDictionary<string, bool> checkClashes = null)
@@ -435,6 +430,6 @@ namespace ModernDev.IronBabylon
                 }
                 break;
             }
-        }
+        }*/
     }
 }
