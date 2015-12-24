@@ -22,8 +22,6 @@ namespace ModernDev.IronBabylon
 
         private ParserOptions Options { get; }
 
-        //public Func<string, bool> IsReservedWord => Util.ReservedWords["6"]; TODO: unused property?
-
         private static int? _nullRef;
 
         #endregion
