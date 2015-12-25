@@ -721,6 +721,11 @@ namespace ModernDev.IronBabylon
                 return FinishNode(node, "ThisTypeAnnotation");
             }
 
+            if (State.Type.Keyword == "typeof")
+            {
+                return FlowParseTypeofType();
+            }
+
             Unexpected();
 
             return null;
