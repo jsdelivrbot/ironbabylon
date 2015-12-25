@@ -1388,8 +1388,7 @@ namespace ModernDev.IronBabylon
             {
                 Unexpected();
             }
-
-            node.All = Eat(TT["star"]);
+            
             node.Argument = ParseMaybeUnary(ref _nullRef);
 
             return FinishNode(node, "AwaitExpression");
