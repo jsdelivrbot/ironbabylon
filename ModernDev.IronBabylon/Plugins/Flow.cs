@@ -712,9 +712,13 @@ namespace ModernDev.IronBabylon
                 return FinishNode(node, "NullLiteralTypeAnnotation");
             }
 
-            if (State.Type.Keyword == "typeof")
+            if (ct == TT["_this"])
             {
-                return FlowParseTypeofType();
+                node.Value = Match(TT["_this"]);
+
+                Next();
+
+                return FinishNode(node, "ThisTypeAnnotation");
             }
 
             Unexpected();
