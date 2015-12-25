@@ -163,7 +163,7 @@ namespace ModernDev.IronBabylon
 
         public static readonly Dictionary<string, TokenType> Keywords = new Dictionary<string, TokenType>
         {
-            { "break", Kw("break")},
+            {"break", Kw("break")},
             {"case", Kw("case", BeforeExprConfig)},
             {"catch", Kw("catch")},
             {"continue", Kw("continue")},
