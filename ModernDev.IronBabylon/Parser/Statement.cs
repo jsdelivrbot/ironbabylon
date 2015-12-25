@@ -642,7 +642,7 @@ namespace ModernDev.IronBabylon
             node.Directives = new List<Node>();
 
             var parsedNonDirective = false;
-            var oldStrict = false;
+            bool? oldStrict = null;
             int? octalPosition = 0;
 
             while (!Eat(end))
@@ -661,7 +661,7 @@ namespace ModernDev.IronBabylon
 
                     node.Directives.Add(directive);
 
-                    if ((string) ((Node) directive.Value).Value == "use strict")
+                    if (oldStrict == null && (string) ((Node) directive.Value).Value == "use strict")
                     {
                         oldStrict = State.Strict;
 
@@ -680,7 +680,7 @@ namespace ModernDev.IronBabylon
                 ((List<Node>) node.Body).Add(stmt);
             }
 
-            if (!oldStrict)
+            if (oldStrict == false)
             {
                 SetStrict(false);
             }
