@@ -73,18 +73,18 @@ namespace ModernDev.IronBabylon
         private string JSXReadNewLine(bool normalizeCRLF)
         {
             var ch = Input.CharCodeAt(State.Position);
-            var outt = "";
+            string outt;
 
             ++State.Position;
 
             if (ch == 13 && Input.CharCodeAt(State.Position) == 10)
             {
                 ++State.Position;
-                outt += normalizeCRLF ? "\n" : "\r\n";
+                outt = normalizeCRLF ? "\n" : "\r\n";
             }
             else
             {
-                outt = ch.ToString();
+                outt = ((char) ch).ToString();
             }
 
             ++State.CurLine;
@@ -143,7 +143,7 @@ namespace ModernDev.IronBabylon
 
             while (State.Position < Input.Length && count++ < 10)
             {
-                var ch = (char)Input.CharCodeAt(State.Position++);
+                var ch = (char) Input.CharCodeAt(State.Position++);
 
                 if (ch == ';')
                 {
@@ -155,7 +155,7 @@ namespace ModernDev.IronBabylon
 
                             if (_hexNumber.IsMatch(str))
                             {
-                                entity = ToInt32(str, 16).ToString();
+                                entity = ((char) ToInt32(str, 16)).ToString();
                             }
                         }
                         else
@@ -164,7 +164,7 @@ namespace ModernDev.IronBabylon
 
                             if (_decimalNumber.IsMatch(str))
                             {
-                                entity = ToInt32(str, 10).ToString();
+                                entity = ((char) ToInt32(str, 10)).ToString();
                             }
                         }
                     }
@@ -508,7 +508,7 @@ namespace ModernDev.IronBabylon
             return ParseExprAtomRegular(ref refShorthandDefaultPos);
         }
 
-        private TokenType ReadTokenJSX(int? code)
+        private TokenType ReadTokenJSX(int code)
         {
             var context = CurrentContext;
 
@@ -533,7 +533,7 @@ namespace ModernDev.IronBabylon
 
                 if ((code == 34 || code == 39) && context == TC["j_oTag"])
                 {
-                    return JSXReadString((int) code);
+                    return JSXReadString(code);
                 }
             }
 

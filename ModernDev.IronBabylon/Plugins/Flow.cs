@@ -956,8 +956,7 @@ namespace ModernDev.IronBabylon
             return base.IsKeyword(name);
         }
 
-        protected override TokenType ReadToken(int? code)
-            => State.InType && (code == 62 || code == 60) ? FinishOp(TT["relational"], 1) : ReadTokenJSX(code);
+        protected override TokenType ReadToken(int code) => State.InType && (code == 62 || code == 60) ? FinishOp(TT["relational"], 1) : ReadTokenJSX(code);
 
         /*
         TODO:
@@ -1000,7 +999,7 @@ namespace ModernDev.IronBabylon
         /// // this is a list of nodes, from something like a call expression, we need to filter the
         /// type casts that we've found that are illegal in this context
         /// </summary>
-        protected List<Node> ToReferencedList(List<Node> exprList)
+        private void ToReferencedList(IEnumerable<Node> exprList)
         {
             foreach (
                 var expr in
@@ -1008,8 +1007,6 @@ namespace ModernDev.IronBabylon
             {
                 Raise(expr.Start, "Unexpected type cast");
             }
-
-            return exprList;
         }
 
         /// <summary>
@@ -1135,7 +1132,7 @@ namespace ModernDev.IronBabylon
             }
         }
 
-        protected Node ParseAssignableListItemTypes(Node param)
+        private Node ParseAssignableListItemTypes(Node param)
         {
             if (Eat(TT["question"]))
             {
@@ -1248,7 +1245,7 @@ namespace ModernDev.IronBabylon
                 }
 
                 Expect(TT["arrow"]);
-
+                
                 return ParseArrowExpression(node, new List<Node>(), isAsync);
             }
             else
@@ -1266,7 +1263,7 @@ namespace ModernDev.IronBabylon
                     catch (SyntaxErrorException)
                     {
                         State = state;
-
+                        
                         return node;
                     }
                     catch (Exception ex)
@@ -1274,7 +1271,6 @@ namespace ModernDev.IronBabylon
                         throw new Exception(ex.Message, ex);
                     }
                 }
-
                 return node;
             }
         }

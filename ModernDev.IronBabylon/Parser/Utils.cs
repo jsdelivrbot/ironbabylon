@@ -80,10 +80,7 @@ namespace ModernDev.IronBabylon
         /// Expect a token of a given type. If found, consume it, otherwise, raise an unexpected token error.
         /// </summary>
         // ReSharper disable once UnusedMethodReturnValue.Local
-        private bool Expect(TokenType type)
-        {
-            return Eat(type) || Unexpected();
-        }
+        private bool Expect(TokenType type) => Eat(type) || Unexpected();
 
         #endregion
     }

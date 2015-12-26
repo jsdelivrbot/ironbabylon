@@ -208,6 +208,12 @@ namespace ModernDev.IronBabylon
         {
             var startPos = State.Start;
             var startLoc = State.StartLoc;
+
+            if (State.Type == TT["jsxTagStart"])
+            {
+                Console.WriteLine("true");
+            }
+
             var expr = ParseMaybeUnary(ref refShorthandDefaultPos);
 
             return refShorthandDefaultPos.ToBool() ? expr : ParseExprOp(expr, startPos, startLoc, -1, noIn);
@@ -220,7 +226,7 @@ namespace ModernDev.IronBabylon
         /// defer further parser to one of its callers when it encounters an
         /// operator that has a lower precedence than the set it is parsing.
         /// </summary>
-        private Node ParseExprOp(Node left, int leftStartPos, Position leftStartLoc, int minPrec, bool noIn)  // TODO:
+        private Node ParseExprOp(Node left, int leftStartPos, Position leftStartLoc, int minPrec, bool noIn)
         {
             var prec = State.Type.Binop;
 
