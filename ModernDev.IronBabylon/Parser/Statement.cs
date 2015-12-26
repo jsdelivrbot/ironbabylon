@@ -643,7 +643,7 @@ namespace ModernDev.IronBabylon
 
             var parsedNonDirective = false;
             bool? oldStrict = null;
-            int? octalPosition = 0;
+            int? octalPosition = null;
 
             while (!Eat(end))
             {

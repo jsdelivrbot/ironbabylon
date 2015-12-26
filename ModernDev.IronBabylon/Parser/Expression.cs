@@ -99,7 +99,7 @@ namespace ModernDev.IronBabylon
 
             bool failOnShorthandAssign;
 
-            if (refShorthandDefaultPos.ToBool())
+            if (refShorthandDefaultPos.HasValue)
             {
                 failOnShorthandAssign = false;
             }
@@ -220,7 +220,7 @@ namespace ModernDev.IronBabylon
         /// defer further parser to one of its callers when it encounters an
         /// operator that has a lower precedence than the set it is parsing.
         /// </summary>
-        private Node ParseExprOp(Node left, int leftStartPos, Position leftStartLoc, int minPrec, bool noIn)
+        private Node ParseExprOp(Node left, int leftStartPos, Position leftStartLoc, int minPrec, bool noIn)  // TODO:
         {
             var prec = State.Type.Binop;
 
