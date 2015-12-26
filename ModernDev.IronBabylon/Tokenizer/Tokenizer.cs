@@ -83,8 +83,9 @@ namespace ModernDev.IronBabylon
 
 		protected State Lookahead()
 		{
-			var oldState = State;
-			State = oldState.Clone(true);
+			var old = State;
+
+			State = old.Clone(true);
 
 			IsLookahead = true;
 
@@ -93,7 +94,8 @@ namespace ModernDev.IronBabylon
 			IsLookahead = false;
 
 			var curr = State.Clone(true);
-			State = oldState;
+
+			State = old;
 
 			return curr;
 		}
@@ -130,7 +132,7 @@ namespace ModernDev.IronBabylon
 		protected TokenType NextToken()
 		{
 			var curContext = CurrentContext;
-
+			
 			if (curContext == null || !curContext.PreserveSpace)
 			{
 				SkipSpace();
@@ -145,39 +147,25 @@ namespace ModernDev.IronBabylon
 			{
 				return FinishToken(TT["eof"]);
 			}
-
+			
 			return curContext?.Override != null ? curContext.Override(this) : ReadToken(FullCharCodeAtPos());
 		}
 
-		protected virtual TokenType ReadToken(int? code)
-			=> IsIdentifierStart(code) || code == 92 ? ReadWord() : GetTokenFromCode(code ?? int.MaxValue);
+		protected virtual TokenType ReadToken(int code)
+			=> IsIdentifierStart(code) || code == 92 ? ReadWord() : GetTokenFromCode(code);
 
-		private int? FullCharCodeAtPos()
+		private int FullCharCodeAtPos()
 		{
-			int? code = null;
-			int? next = null;
-
-			if (State.Position < Input.Length)
-			{
-				code = Input[State.Position];
-			}
+			var code = Input.CharCodeAt(State.Position);
 
 			if (code <= 0xd7ff || code >= 0xe000)
 			{
 				return code;
 			}
 
-			if (State.Position + 1 < Input.Length)
-			{
-				next = Input[State.Position + 1];
-			}
+			var next = Input.CharCodeAt(State.Position + 1);
 
-			if (code.ToBool() && next.ToBool())
-			{
-				return (code << 10) + next - 0x35fdc00;
-			}
-
-			return null;
+			return (code << 10) + next - 0x35fdc00;
 		}
 
 		private void PushComment(bool block, string text, int start, int end, Position startLoc, Position endLoc)
