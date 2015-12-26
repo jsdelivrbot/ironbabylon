@@ -3,7 +3,6 @@
 //
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -161,9 +160,22 @@ namespace ModernDev.IronBabylon
             {
                 var val = prop.GetValue(this);
 
-                if ((!skipArrays || prop.Name == "Context") && prop.GetType() == typeof (IList))
+                // Takes only IList
+                if ((!skipArrays || prop.Name == "Context") && prop.PropertyType.GetInterface("IList") != null &&
+                    val != null)
                 {
-                    val = (val as IList<object>)?.ToList();
+                    if (val.GetType() == typeof (List<Node>))
+                    {
+                        val = ((List<Node>) val).ToList();
+                    }
+                    else if (val.GetType() == typeof (List<TokenContext>))
+                    {
+                        val = ((List<TokenContext>) val).ToList();
+                    }
+                    else if (val.GetType() == typeof (List<object>))
+                    {
+                        val = ((List<object>) val).ToList();
+                    }
                 }
 
                 prop.SetValue(state, val);
