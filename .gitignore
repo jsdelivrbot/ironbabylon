@@ -175,3 +175,10 @@ test-results
 package
 images
 MockAssemblyResult.xml
+
+# =========================
+# Custom
+# =========================
+
+*.csproj.DotSettings
+*.csproj.csdat
