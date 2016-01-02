@@ -317,7 +317,7 @@ namespace ModernDev.IronBabylon
                             prop = propNode.Value;
                         }
 
-                        CheckLVal(((Node) prop), isBinding, checkClashes);
+                        CheckLVal((Node) prop, isBinding, checkClashes);
                     }
 
                     break;
