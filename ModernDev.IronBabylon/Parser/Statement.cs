@@ -1007,7 +1007,7 @@ namespace ModernDev.IronBabylon
                 {
                     var paramCount = method.Kind == "get" ? 0 : 1;
 
-                    if (method.Params.As<List<Node>>().Count != paramCount)
+                    if (method.Params.Count != paramCount)
                     {
                         Raise(method.Start,
                             method.Kind == "get"
