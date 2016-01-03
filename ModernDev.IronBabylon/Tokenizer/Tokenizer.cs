@@ -214,12 +214,12 @@ namespace ModernDev.IronBabylon
 		{
 			var start = State.Position;
 			var startLoc = State.CurrentPosition;
-			var ch = Input[State.Position += startSkip];
+			var ch = Input.CharCodeAt(State.Position += startSkip);
 
 			while (State.Position < Input.Length && ch != 10 && ch != 13 && ch != 8232 && ch != 8233)
 			{
 				++State.Position;
-				ch = Input[State.Position];
+				ch = Input.CharCodeAt(State.Position);
 			}
 
 			PushComment(false, Input.Slice(start + startSkip, State.Position), start, State.Position, startLoc,
