@@ -156,7 +156,8 @@ namespace ModernDev.IronBabylon
                 }
 
                 Next();
-                
+
+                _nullRef = null;
                 node.Right = ParseMaybeAssign(noIn, ref _nullRef);
 
                 return FinishNode(node, "AssignmentExpression");
@@ -189,10 +190,12 @@ namespace ModernDev.IronBabylon
                 var node = StartNodeAt(startPos, startLoc);
 
                 node.Test = expr;
+                _nullRef = null;
                 node.Consequent = ParseMaybeAssign(false, ref _nullRef);
 
                 Expect(TT["colon"]);
 
+                _nullRef = null;
                 node.Altername = ParseMaybeAssign(noIn, ref _nullRef);
 
                 return FinishNode(node, "ConditionalExpression");
@@ -254,6 +257,7 @@ namespace ModernDev.IronBabylon
                     var startPos = State.Start;
                     var startLoc = State.StartLoc;
 
+                    _nullRef = null;
                     node.Right = ParseExprOp(ParseMaybeUnary(ref _nullRef), startPos, startLoc,
                         op.RightAssociative ? (int) prec - 1 : (int) prec, noIn);
 
@@ -286,6 +290,7 @@ namespace ModernDev.IronBabylon
 
                 AddExtra(node, "parenthesizedArgument", argType == TT["parenL"]);
 
+                _nullRef = null;
                 node.Argument = ParseMaybeUnary(ref _nullRef);
 
                 if (refShorthandDefaultPos.ToBool())
@@ -382,6 +387,7 @@ namespace ModernDev.IronBabylon
                     var node = StartNodeAt(startPos, startLoc);
 
                     node.Object = b;
+                    _nullRef = null;
                     node.Property = ParseExpression(false, ref _nullRef);
                     node.Computed = true;
 
@@ -452,6 +458,8 @@ namespace ModernDev.IronBabylon
                     innerParentStart = State.Start;
                 }
 
+                _nullRef = null;
+
                 elts.Add(ParseExprListItem(false, ref _nullRef));
             }
 
@@ -479,6 +487,8 @@ namespace ModernDev.IronBabylon
         {
             var startPos = State.Start;
             var startLoc = State.StartLoc;
+
+            _nullRef = null;
 
             return ParseSubscripts(ParseExprAtom(ref _nullRef), startPos, startLoc, true);
         }
@@ -732,6 +742,8 @@ namespace ModernDev.IronBabylon
         {
             Expect(TT["parenL"]);
 
+            _nullRef = null;
+
             var val = ParseExpression(false, ref _nullRef);
 
             Expect(TT["parenR"]);
@@ -868,6 +880,7 @@ namespace ModernDev.IronBabylon
 
             if (Eat(TT["parenL"]))
             {
+                _nullRef = null;
                 node.Arguments = ParseExprList(TT["parenR"], true, false, ref _nullRef);
 
                 ToReferencedList(node.Arguments);
@@ -916,6 +929,9 @@ namespace ModernDev.IronBabylon
             while (!curElt.Tail)
             {
                 Expect(TT["dollarBraceL"]);
+
+                _nullRef = null;
+
                 node.Expressions.Add(ParseExpression(false, ref _nullRef));
                 Expect(TT["braceR"]);
                 node.Quasis.Add(curElt = ParseTemplateElement());
@@ -975,6 +991,7 @@ namespace ModernDev.IronBabylon
 
                 if (Match(TT["ellipsis"]))
                 {
+                    _nullRef = null;
                     prop = ParseSpread(ref _nullRef);
                     prop.Type = isPattern ? "RestProperty" : "SpreadProperty";
                     node.Properties.Add(prop);
@@ -1145,6 +1162,7 @@ namespace ModernDev.IronBabylon
             if (Eat(TT["bracketL"]))
             {
                 prop.Computed = true;
+                _nullRef = null;
                 prop.Key = ParseMaybeAssign(false, ref _nullRef);
 
                 Expect(TT["bracketR"]);
@@ -1153,6 +1171,7 @@ namespace ModernDev.IronBabylon
             }
 
             prop.Computed = false;
+            _nullRef = null;
             prop.Key = Match(TT["num"]) || Match(TT["string"]) ? ParseExprAtom(ref _nullRef) : ParseIdentifier(true);
 
             return (Node) prop.Key;
@@ -1224,6 +1243,7 @@ namespace ModernDev.IronBabylon
 
             if (isExpression)
             {
+                _nullRef = null;
                 node.Body = ParseMaybeAssign(false, ref _nullRef);
                 node.Expression = true;
             }
@@ -1401,7 +1421,8 @@ namespace ModernDev.IronBabylon
             {
                 Unexpected();
             }
-            
+
+            _nullRef = null;
             node.Argument = ParseMaybeUnary(ref _nullRef);
 
             return FinishNode(node, "AwaitExpression");
@@ -1424,6 +1445,7 @@ namespace ModernDev.IronBabylon
             else
             {
                 node.Delegate = Eat(TT["star"]);
+                _nullRef = null;
                 node.Argument = ParseMaybeAssign(false, ref _nullRef);
             }
 

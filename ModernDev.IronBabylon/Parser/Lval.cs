@@ -200,6 +200,8 @@ namespace ModernDev.IronBabylon
 
             if (State.Type == TT["braceL"])
             {
+                _nullRef = null;
+
                 return ParseObj(true, ref _nullRef);
             }
 
@@ -267,6 +269,7 @@ namespace ModernDev.IronBabylon
             var node = StartNodeAt((int) startPos, startLoc);
 
             node.Left = left;
+            _nullRef = null; // Reset to null just in case
             node.Right = ParseMaybeAssign(false, ref _nullRef);
 
             return FinishNode(node, "AssignmentPattern");

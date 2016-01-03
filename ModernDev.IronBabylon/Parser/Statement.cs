@@ -180,6 +180,7 @@ namespace ModernDev.IronBabylon
             }
 
             var maybeName = State.Value as string;
+            _nullRef = null;
             var expr = ParseExpression(false, ref _nullRef);
 
             if (startType == TT["name"] && expr.Type == "Identifier" && Eat(TT["colon"]))
@@ -224,6 +225,7 @@ namespace ModernDev.IronBabylon
 
             Next();
 
+            _nullRef = null;
             node.Expression = ParseMaybeAssign(false, ref _nullRef);
 
             return FinishNode(node, "Decorator");
@@ -399,6 +401,7 @@ namespace ModernDev.IronBabylon
             }
             else
             {
+                _nullRef = null;
                 node.Argument = ParseExpression(false, ref _nullRef);
 
                 Semicolon();
@@ -437,6 +440,7 @@ namespace ModernDev.IronBabylon
 
                     if (isCase)
                     {
+                        _nullRef = null;
                         cur.Test = ParseExpression(false, ref _nullRef);
                     }
                     else
@@ -485,6 +489,7 @@ namespace ModernDev.IronBabylon
                 Raise(State.LastTokenEnd, "Illegal newline after throw");
             }
 
+            _nullRef = null;
             node.Argument = ParseExpression(false, ref _nullRef);
 
             Semicolon();
@@ -696,10 +701,12 @@ namespace ModernDev.IronBabylon
 
             Expect(TT["semi"]);
 
+            _nullRef = null;
             node.Test = Match(TT["semi"]) ? null : ParseExpression(false, ref _nullRef);
 
             Expect(TT["semi"]);
 
+            _nullRef = null;
             node.Update = Match(TT["parenR"]) ? null : ParseExpression(false, ref _nullRef);
 
             Expect(TT["parenR"]);
@@ -721,6 +728,7 @@ namespace ModernDev.IronBabylon
             Next();
 
             node.Left = init;
+            _nullRef = null;
             node.Right = ParseExpression(false, ref _nullRef);
 
             Expect(TT["parenR"]);
@@ -745,6 +753,7 @@ namespace ModernDev.IronBabylon
 
                 if (Eat(TT["eq"]))
                 {
+                    _nullRef = null;
                     decl.Init = ParseMaybeAssign(isFor, ref _nullRef);
                 }
                 else if (kind == TT["_const"] && !(Match(TT["_in"]) || IsContextual("of")))
@@ -1033,6 +1042,7 @@ namespace ModernDev.IronBabylon
             {
                 Next();
 
+                _nullRef = null;
                 node.Value = ParseMaybeAssign(false, ref _nullRef);
             }
             else
@@ -1072,6 +1082,7 @@ namespace ModernDev.IronBabylon
 
         private void ParseClassSuperRegular(Node node)
         {
+            _nullRef = null;
             node.SuperClass = Eat(TT["_extends"]) ? ParseExprSubscripts(ref _nullRef) : null;
         }
 
@@ -1146,6 +1157,7 @@ namespace ModernDev.IronBabylon
                 else
                 {
                     needsSemi = true;
+                    _nullRef = null;
                     expr = ParseMaybeAssign(false, ref _nullRef);
                 }
 
@@ -1221,6 +1233,7 @@ namespace ModernDev.IronBabylon
             {
                 if (Match(TT["string"]))
                 {
+                    _nullRef = null;
                     node.Source = ParseExprAtom(ref _nullRef);
                 }
                 else
@@ -1323,6 +1336,7 @@ namespace ModernDev.IronBabylon
 
             if (Match(TT["string"]))
             {
+                _nullRef = null;
                 node.Source = ParseExprAtom(ref _nullRef);
             }
             else
@@ -1332,6 +1346,7 @@ namespace ModernDev.IronBabylon
 
                 if (Match(TT["string"]))
                 {
+                    _nullRef = null;
                     node.Source = ParseExprAtom(ref _nullRef);
                 }
                 else
