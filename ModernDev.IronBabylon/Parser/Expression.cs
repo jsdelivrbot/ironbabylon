@@ -1054,8 +1054,9 @@ namespace ModernDev.IronBabylon
                 prop.Method = true;
 
                 ParseMethod(prop, isGenerator, isAsync);
+                FinishNode(prop, "ObjectMethod");
 
-                return; // FinishNode(prop, "ObjectMethod");
+                return;
             }
 
             if (Eat(TT["colon"]))
@@ -1064,7 +1065,9 @@ namespace ModernDev.IronBabylon
                     ? ParseMaybeDefault(State.Start, State.StartLoc)
                     : ParseMaybeAssign(false, ref refShorthandDefaultPos);
 
-                return; // FinishNode(prop, "ObjectProperty");
+                FinishNode(prop, "ObjectProperty");
+
+                return;
             }
 
             if (!prop.Computed && prop.Key.As<Node>().Type == "Identifier" &&
@@ -1088,8 +1091,10 @@ namespace ModernDev.IronBabylon
                     Raise(prop.Start,
                         prop.Kind == "get" ? "getter should have no params" : "setter should have exactly one param");
                 }
-                
-                return; // FinishNode(prop, "ObjectMethod");
+
+                FinishNode(prop, "ObjectMethod");
+
+                return;
             }
 
             if (!prop.Computed && prop.Key.As<Node>().Type == "Identifier")
@@ -1127,7 +1132,9 @@ namespace ModernDev.IronBabylon
 
                 prop.Shorthand = true;
 
-                return; // FinishNode(prop, "ObjectProperty");
+                FinishNode(prop, "ObjectProperty");
+
+                return;
             }
 
             Unexpected();
