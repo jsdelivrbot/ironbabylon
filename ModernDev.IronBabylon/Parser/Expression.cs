@@ -210,12 +210,6 @@ namespace ModernDev.IronBabylon
         {
             var startPos = State.Start;
             var startLoc = State.StartLoc;
-
-            if (State.Type == TT["jsxTagStart"])
-            {
-                Console.WriteLine("true");
-            }
-
             var expr = ParseMaybeUnary(refShorthandDefaultPos);
 
             return refShorthandDefaultPos != null && refShorthandDefaultPos.Start != 0 ? expr : ParseExprOp(expr, startPos, startLoc, -1, noIn);
@@ -389,7 +383,7 @@ namespace ModernDev.IronBabylon
 
                     Expect(TT["bracketR"]);
 
-                    return FinishNode(node, "MemberExpression");
+                    b = FinishNode(node, "MemberExpression");
                 }
                 else if (!noCalls && Match(TT["parenL"]))
                 {
