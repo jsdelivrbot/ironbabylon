@@ -70,7 +70,7 @@ namespace ModernDev.IronBabylon
             }
         }
 
-        private string JSXReadNewLine(bool normalizeCRLF)
+        private string JSXReadNewLine(bool normalizeCRLF = false)
         {
             var ch = Input.CharCodeAt(State.Position);
             string outt;
@@ -120,7 +120,7 @@ namespace ModernDev.IronBabylon
                 } else if (IsNewLine(ch))
                 {
                     outt += Input.Slice(chunkStart, State.Position);
-                    outt += JSXReadNewLine(false);
+                    outt += JSXReadNewLine();
                     chunkStart = State.Position;
                 }
                 else
@@ -318,7 +318,7 @@ namespace ModernDev.IronBabylon
 
             if (State.Type == TT["jsxTagStart"] || State.Type == TT["string"])
             {
-                node = ParseExprAtom(ref _nullRef);
+                node = ParseExprAtom();
                 node.Extra = null;
 
                 return node;
@@ -351,7 +351,7 @@ namespace ModernDev.IronBabylon
 
             Next();
 
-            node.Expression = Match(TT["braceR"]) ? JSXParseEmptyExpression() : ParseExpression(false, ref _nullRef);
+            node.Expression = Match(TT["braceR"]) ? JSXParseEmptyExpression() : ParseExpression();
 
             Expect(TT["braceR"]);
 
@@ -369,7 +369,7 @@ namespace ModernDev.IronBabylon
             {
                 Expect(TT["ellipsis"]);
 
-                node.Argument = ParseMaybeAssign(false, ref _nullRef);
+                node.Argument = ParseMaybeAssign();
 
                 Expect(TT["braceR"]);
 
@@ -446,7 +446,7 @@ namespace ModernDev.IronBabylon
                         children.Add(JSXParseElementAt(startPos, startLoc));
                     } else if (State.Type == TT["jsxText"])
                     {
-                        children.Add(ParseExprAtom(ref _nullRef));
+                        children.Add(ParseExprAtom());
                     } else if (State.Type == TT["braceL"])
                     {
                         children.Add(JSXParseExpressionContainer());
@@ -489,7 +489,7 @@ namespace ModernDev.IronBabylon
 
         #region Plugin overrides
 
-        private Node ParseExprAtom(ref int? refShorthandDefaultPos)
+        private Node ParseExprAtom(dynamic refShorthandDefaultPos = null)
         {
             if (Match(TT["jsxText"]))
             {
@@ -505,7 +505,7 @@ namespace ModernDev.IronBabylon
                 return JSXParseElement();
             }
 
-            return ParseExprAtomRegular(ref refShorthandDefaultPos);
+            return ParseExprAtomRegular(refShorthandDefaultPos);
         }
 
         private TokenType ReadTokenJSX(int code)

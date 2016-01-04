@@ -98,7 +98,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Convert list of expression atoms to binding list.
         /// </summary>
-        private List<Node> ToAssignableListRegular(List<Node> exprList, bool isBinding)
+        private List<Node> ToAssignableListRegular(List<Node> exprList, bool isBinding = false)
         {
             var end = exprList.Count;
 
@@ -146,13 +146,13 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parses spread element.
         /// </summary>
-        private Node ParseSpread(ref int? refShorthandDefaultPos)
+        private Node ParseSpread(dynamic refShorthandDefaultPos = null)
         {
             var node = StartNode();
 
             Next();
 
-            node.Argument = ParseMaybeAssign(false, ref refShorthandDefaultPos);
+            node.Argument = ParseMaybeAssign(false, refShorthandDefaultPos);
 
             return FinishNode(node, "SpreadElement");
         }
@@ -200,16 +200,14 @@ namespace ModernDev.IronBabylon
 
             if (State.Type == TT["braceL"])
             {
-                _nullRef = null;
-
-                return ParseObj(true, ref _nullRef);
+                return ParseObj(true);
             }
 
             Unexpected();
             return null;
         }
 
-        private List<Node> ParseBindingList(TokenType close, bool allowEmpty, bool allowTrailingComma)
+        private List<Node> ParseBindingList(TokenType close, bool allowEmpty = false, bool allowTrailingComma = false)
         {
             var elts = new List<Node>();
             var first = true;
@@ -269,8 +267,7 @@ namespace ModernDev.IronBabylon
             var node = StartNodeAt((int) startPos, startLoc);
 
             node.Left = left;
-            _nullRef = null; // Reset to null just in case
-            node.Right = ParseMaybeAssign(false, ref _nullRef);
+            node.Right = ParseMaybeAssign();
 
             return FinishNode(node, "AssignmentPattern");
         }

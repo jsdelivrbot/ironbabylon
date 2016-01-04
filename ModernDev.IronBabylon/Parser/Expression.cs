@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using static ModernDev.IronBabylon.Util;
@@ -61,11 +62,11 @@ namespace ModernDev.IronBabylon
         /// and object pattern might appear (so it's possible to raise
         /// delayed syntax error at correct position).
         /// </summary>
-        private Node ParseExpression(bool noIn, ref int? refShorthandDefaultPos)
+        private Node ParseExpression(bool noIn = false, dynamic refShorthandDefaultPos = null)
         {
             var startPos = State.Start;
             var startLoc = State.StartLoc;
-            var expr = ParseMaybeAssign(noIn, ref refShorthandDefaultPos);
+            var expr = ParseMaybeAssign(noIn, refShorthandDefaultPos);
 
             if (Match(TT["comma"]))
             {
@@ -75,7 +76,7 @@ namespace ModernDev.IronBabylon
 
                 while (Eat(TT["comma"]))
                 {
-                    node.Expressions.Add(ParseMaybeAssign(noIn, ref refShorthandDefaultPos));
+                    node.Expressions.Add(ParseMaybeAssign(noIn, refShorthandDefaultPos));
                 }
 
                 ToReferencedList(node.Expressions);
@@ -89,7 +90,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parse an assignment expression. This includes applications of operators like `+=`.
         /// </summary>
-        private Node ParseMaybeAssign(bool noIn, ref int? refShorthandDefaultPos,
+        private Node ParseMaybeAssign(bool noIn = false, dynamic refShorthandDefaultPos = null,
             Func<Node, int?, Position, bool, Node> afterLeftParse = null)
         {
             if (Match(TT["_yield"]) && State.InGenerator)
@@ -99,13 +100,14 @@ namespace ModernDev.IronBabylon
 
             bool failOnShorthandAssign;
 
-            if (refShorthandDefaultPos.HasValue)
+            if (refShorthandDefaultPos != null)
             {
                 failOnShorthandAssign = false;
             }
             else
             {
-                refShorthandDefaultPos = 0;
+                refShorthandDefaultPos = new ExpandoObject();
+                refShorthandDefaultPos.Start = 0;
                 failOnShorthandAssign = true;
             }
 
@@ -117,7 +119,7 @@ namespace ModernDev.IronBabylon
                 State.PotentialArrowAt = State.Start;
             }
 
-            var left = ParseMaybeConditional(noIn, ref refShorthandDefaultPos);
+            Node left = ParseMaybeConditional(noIn, refShorthandDefaultPos);
 
             if (afterLeftParse != null)
             {
@@ -130,7 +132,7 @@ namespace ModernDev.IronBabylon
 
                 node.Operator = State.Value as string;
                 node.Left = Match(TT["eq"]) ? ToAssignable(left) : left;
-                refShorthandDefaultPos = 0;
+                refShorthandDefaultPos.Start = 0;
 
                 CheckLVal(left);
 
@@ -156,16 +158,15 @@ namespace ModernDev.IronBabylon
                 }
 
                 Next();
-
-                _nullRef = null;
-                node.Right = ParseMaybeAssign(noIn, ref _nullRef);
+                
+                node.Right = ParseMaybeAssign(noIn);
 
                 return FinishNode(node, "AssignmentExpression");
             }
 
-            if (failOnShorthandAssign && refShorthandDefaultPos.ToBool())
+            if (failOnShorthandAssign && refShorthandDefaultPos.Start != 0)
             {
-                Unexpected(refShorthandDefaultPos);
+                Unexpected(refShorthandDefaultPos.Start);
             }
 
             return left;
@@ -174,13 +175,13 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parse a ternary conditional (`?:`) operator.
         /// </summary>
-        private Node ParseMaybeConditional(bool noIn, ref int? refShorthandDefaultPos)
+        private Node ParseMaybeConditional(bool noIn = false, dynamic refShorthandDefaultPos = null)
         {
             var startPos = State.Start;
             var startLoc = State.StartLoc;
-            var expr = ParseExprOps(noIn, ref refShorthandDefaultPos);
+            var expr = ParseExprOps(noIn, refShorthandDefaultPos);
 
-            if (refShorthandDefaultPos.ToBool())
+            if (refShorthandDefaultPos != null && refShorthandDefaultPos.Start != 0)
             {
                 return expr;
             }
@@ -190,13 +191,11 @@ namespace ModernDev.IronBabylon
                 var node = StartNodeAt(startPos, startLoc);
 
                 node.Test = expr;
-                _nullRef = null;
-                node.Consequent = ParseMaybeAssign(false, ref _nullRef);
+                node.Consequent = ParseMaybeAssign();
 
                 Expect(TT["colon"]);
-
-                _nullRef = null;
-                node.Altername = ParseMaybeAssign(noIn, ref _nullRef);
+                
+                node.Altername = ParseMaybeAssign(noIn);
 
                 return FinishNode(node, "ConditionalExpression");
             }
@@ -207,7 +206,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Start the precedence parser.
         /// </summary>
-        private Node ParseExprOps(bool noIn, ref int? refShorthandDefaultPos)
+        private Node ParseExprOps(bool noIn = false, dynamic refShorthandDefaultPos = null)
         {
             var startPos = State.Start;
             var startLoc = State.StartLoc;
@@ -217,9 +216,9 @@ namespace ModernDev.IronBabylon
                 Console.WriteLine("true");
             }
 
-            var expr = ParseMaybeUnary(ref refShorthandDefaultPos);
+            var expr = ParseMaybeUnary(refShorthandDefaultPos);
 
-            return refShorthandDefaultPos.ToBool() ? expr : ParseExprOp(expr, startPos, startLoc, -1, noIn);
+            return refShorthandDefaultPos != null && refShorthandDefaultPos.Start != 0 ? expr : ParseExprOp(expr, startPos, startLoc, -1, noIn);
         }
 
         /// <summary>
@@ -256,9 +255,8 @@ namespace ModernDev.IronBabylon
 
                     var startPos = State.Start;
                     var startLoc = State.StartLoc;
-
-                    _nullRef = null;
-                    node.Right = ParseExprOp(ParseMaybeUnary(ref _nullRef), startPos, startLoc,
+                    
+                    node.Right = ParseExprOp(ParseMaybeUnary(), startPos, startLoc,
                         op.RightAssociative ? (int) prec - 1 : (int) prec, noIn);
 
                     FinishNode(node,
@@ -274,7 +272,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parse unary operators, both prefix and postfix.
         /// </summary>
-        private Node ParseMaybeUnary(ref int? refShorthandDefaultPos)
+        private Node ParseMaybeUnary(dynamic refShorthandDefaultPos = null)
         {
             if (State.Type.Prefix)
             {
@@ -289,11 +287,10 @@ namespace ModernDev.IronBabylon
                 var argType = State.Type;
 
                 AddExtra(node, "parenthesizedArgument", argType == TT["parenL"]);
+                
+                node.Argument = ParseMaybeUnary();
 
-                _nullRef = null;
-                node.Argument = ParseMaybeUnary(ref _nullRef);
-
-                if (refShorthandDefaultPos.ToBool())
+                if (refShorthandDefaultPos != null && refShorthandDefaultPos.Start != 0)
                 {
                     Unexpected(refShorthandDefaultPos);
                 }
@@ -312,9 +309,9 @@ namespace ModernDev.IronBabylon
 
             var startPos = State.Start;
             var startLoc = State.StartLoc;
-            var expr = ParseExprSubscripts(ref refShorthandDefaultPos);
+            var expr = ParseExprSubscripts(refShorthandDefaultPos);
 
-            if (refShorthandDefaultPos.ToBool())
+            if (refShorthandDefaultPos != null && refShorthandDefaultPos.Start != 0)
             {
                 return expr;
             }
@@ -339,19 +336,19 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// // Parse call, dot, and `[]`-subscript expressions.
         /// </summary>
-        private Node ParseExprSubscripts(ref int? refShorthandDefaultPos)
+        private Node ParseExprSubscripts(dynamic refShorthandDefaultPos = null)
         {
             var startPos = State.Start;
             var startLoc = State.StartLoc;
             var paa = State.PotentialArrowAt;
-            var expr = ParseExprAtom(ref refShorthandDefaultPos);
+            var expr = ParseExprAtom(refShorthandDefaultPos);
 
             if (expr.Type == "ArrowFunctionExpression" && expr.Start == paa)
             {
                 return expr;
             }
 
-            if (refShorthandDefaultPos.ToBool())
+            if (refShorthandDefaultPos != null && refShorthandDefaultPos.Start != 0)
             {
                 return expr;
             }
@@ -387,8 +384,7 @@ namespace ModernDev.IronBabylon
                     var node = StartNodeAt(startPos, startLoc);
 
                     node.Object = b;
-                    _nullRef = null;
-                    node.Property = ParseExpression(false, ref _nullRef);
+                    node.Property = ParseExpression();
                     node.Computed = true;
 
                     Expect(TT["bracketR"]);
@@ -431,7 +427,7 @@ namespace ModernDev.IronBabylon
             }
         }
 
-        private List<Node> ParseCallExpressionArguments(TokenType close, bool allowtrailingComma, bool possibleAsyncArrow)
+        private List<Node> ParseCallExpressionArguments(TokenType close, bool allowtrailingComma = false, bool possibleAsyncArrow = false)
         {
             var innerParentStart = 0;
             var elts = new List<Node>();
@@ -458,9 +454,7 @@ namespace ModernDev.IronBabylon
                     innerParentStart = State.Start;
                 }
 
-                _nullRef = null;
-
-                elts.Add(ParseExprListItem(false, ref _nullRef));
+                elts.Add(ParseExprListItem());
             }
 
             if (possibleAsyncArrow && innerParentStart.ToBool() && ShouldParseAsyncArrow)
@@ -487,10 +481,8 @@ namespace ModernDev.IronBabylon
         {
             var startPos = State.Start;
             var startLoc = State.StartLoc;
-
-            _nullRef = null;
-
-            return ParseSubscripts(ParseExprAtom(ref _nullRef), startPos, startLoc, true);
+            
+            return ParseSubscripts(ParseExprAtom(), startPos, startLoc, true);
         }
 
         /// <summary>
@@ -498,7 +490,7 @@ namespace ModernDev.IronBabylon
         /// expression, an expression started by a keyword like `function` or
         /// `new`, or an expression wrapped in punctuation like `()`, `[]`, or `{}`.
         /// </summary>
-        private Node ParseExprAtomRegular(ref int? refShorthandDefaultPos)
+        private Node ParseExprAtomRegular(dynamic refShorthandDefaultPos = null)
         {
             Node node;
             var canBeArrow = State.PotentialArrowAt == State.Start;
@@ -637,7 +629,7 @@ namespace ModernDev.IronBabylon
 
                 Next();
 
-                node.Elements = ParseExprList(TT["bracketR"], true, true, ref refShorthandDefaultPos);
+                node.Elements = ParseExprList(TT["bracketR"], true, true, refShorthandDefaultPos);
 
                 ToReferencedList(node.Elements);
 
@@ -645,7 +637,7 @@ namespace ModernDev.IronBabylon
             }
             else if (State.Type == TT["braceL"])
             {
-                return ParseObj(false, ref refShorthandDefaultPos);
+                return ParseObj(false, refShorthandDefaultPos);
             }
             else if (State.Type == TT["_function"])
             {
@@ -662,7 +654,7 @@ namespace ModernDev.IronBabylon
 
                 TakeDecorators(node);
 
-                return ParseClass(node, false);
+                return ParseClass(node);
             }
             else if (State.Type == TT["_new"])
             {
@@ -708,7 +700,7 @@ namespace ModernDev.IronBabylon
             }
 
 
-            return ParseFunction(node, false);
+            return ParseFunction(node);
         }
 
         private Node ParseMetaProperty(Node node, Node meta, string propertyName)
@@ -742,16 +734,14 @@ namespace ModernDev.IronBabylon
         {
             Expect(TT["parenL"]);
 
-            _nullRef = null;
-
-            var val = ParseExpression(false, ref _nullRef);
+            var val = ParseExpression();
 
             Expect(TT["parenR"]);
 
             return val;
         }
 
-        private Node ParseParenAndDistinguishExpressionRegular(int? startPos, Position startLoc, bool canBeArrow,
+        private Node ParseParenAndDistinguishExpressionRegular(int? startPos, Position startLoc, bool canBeArrow = false,
             bool isAsync = false)
         {
             startPos = startPos ?? State.Start;
@@ -765,7 +755,8 @@ namespace ModernDev.IronBabylon
             var innerStartLoc = State.StartLoc;
             var exprList = new List<Node>();
             var optionalCommaStart = 0;
-            int? refShorthandDefaultPos = 0;
+            dynamic refShorthandDefaultPos = new ExpandoObject();
+            refShorthandDefaultPos.Start = 0;
             var spreadStart = 0;
             var first = true;
 
@@ -798,7 +789,9 @@ namespace ModernDev.IronBabylon
                     break;
                 }
 
-                exprList.Add(ParseMaybeAssign(false, ref refShorthandDefaultPos, ParseParenItem));
+                Func<Node, int?, Position, bool, Node> fn = ParseParenItem;
+
+                exprList.Add(ParseMaybeAssign(false, refShorthandDefaultPos, fn));
             }
 
             var innerEndPos = State.Start;
@@ -836,7 +829,7 @@ namespace ModernDev.IronBabylon
                 Unexpected(spreadStart);
             }
 
-            if (refShorthandDefaultPos.ToBool())
+            if (refShorthandDefaultPos.Start != 0)
             {
                 Unexpected(refShorthandDefaultPos);
             }
@@ -880,8 +873,7 @@ namespace ModernDev.IronBabylon
 
             if (Eat(TT["parenL"]))
             {
-                _nullRef = null;
-                node.Arguments = ParseExprList(TT["parenR"], true, false, ref _nullRef);
+                node.Arguments = ParseExprList(TT["parenR"], true);
 
                 ToReferencedList(node.Arguments);
             }
@@ -929,10 +921,8 @@ namespace ModernDev.IronBabylon
             while (!curElt.Tail)
             {
                 Expect(TT["dollarBraceL"]);
-
-                _nullRef = null;
-
-                node.Expressions.Add(ParseExpression(false, ref _nullRef));
+                
+                node.Expressions.Add(ParseExpression());
                 Expect(TT["braceR"]);
                 node.Quasis.Add(curElt = ParseTemplateElement());
             }
@@ -945,7 +935,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parse an object literal or binding pattern.
         /// </summary>
-        private Node ParseObj(bool isPattern, ref int? refShorthandDefaultPos)
+        private Node ParseObj(bool isPattern = false, dynamic refShorthandDefaultPos = null)
         {
             var decorators = new List<Node>();
             var propHash = new Dictionary<string, bool>();
@@ -991,8 +981,7 @@ namespace ModernDev.IronBabylon
 
                 if (Match(TT["ellipsis"]))
                 {
-                    _nullRef = null;
-                    prop = ParseSpread(ref _nullRef);
+                    prop = ParseSpread();
                     prop.Type = isPattern ? "RestProperty" : "SpreadProperty";
                     node.Properties.Add(prop);
 
@@ -1002,7 +991,7 @@ namespace ModernDev.IronBabylon
                 prop.Method = false;
                 prop.Shorthand = false;
 
-                if (isPattern || refShorthandDefaultPos.HasValue)
+                if (isPattern || refShorthandDefaultPos != null)
                 {
                     startPos = State.Start;
                     startLoc = State.StartLoc;
@@ -1039,7 +1028,7 @@ namespace ModernDev.IronBabylon
                     ParsePropertyName(prop);
                 }
 
-                ParseObjPropValue(prop, startPos, startLoc, isGenerator, isAsync, isPattern, ref refShorthandDefaultPos);
+                ParseObjPropValue(prop, startPos, startLoc, isGenerator, isAsync, isPattern, refShorthandDefaultPos);
                 CheckPropClash(prop, propHash);
 
                 if (prop.Shorthand)
@@ -1058,7 +1047,7 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, isPattern ? "ObjectPattern" : "ObjectExpression");
         }
 
-        private void ParseObjPropValueRegular(Node prop, int startPos, Position startLoc, bool isGenerator, bool isAsync, bool isPattern, ref int? refShorthandDefaultPos)
+        private void ParseObjPropValueRegular(Node prop, int startPos, Position startLoc, bool isGenerator = false, bool isAsync = false, bool isPattern = false, dynamic refShorthandDefaultPos = null)
         {
             if (isGenerator || isAsync || Match(TT["parenL"]))
             {
@@ -1080,7 +1069,7 @@ namespace ModernDev.IronBabylon
             {
                 prop.Value = isPattern
                     ? ParseMaybeDefault(State.Start, State.StartLoc)
-                    : ParseMaybeAssign(false, ref refShorthandDefaultPos);
+                    : ParseMaybeAssign(false, refShorthandDefaultPos);
 
                 FinishNode(prop, "ObjectProperty");
 
@@ -1135,9 +1124,9 @@ namespace ModernDev.IronBabylon
                 }
                 else if (Match(TT["eq"]) && refShorthandDefaultPos != null)
                 {
-                    if (!refShorthandDefaultPos.ToBool())
+                    if (refShorthandDefaultPos.Start == 0)
                     {
-                        refShorthandDefaultPos = State.Start;
+                        refShorthandDefaultPos.Start = State.Start;
                     }
 
                     prop.Value = ParseMaybeDefault(startPos, startLoc, (Node) prop.Key.As<Node>().Clone());
@@ -1162,8 +1151,7 @@ namespace ModernDev.IronBabylon
             if (Eat(TT["bracketL"]))
             {
                 prop.Computed = true;
-                _nullRef = null;
-                prop.Key = ParseMaybeAssign(false, ref _nullRef);
+                prop.Key = ParseMaybeAssign();
 
                 Expect(TT["bracketR"]);
 
@@ -1171,8 +1159,7 @@ namespace ModernDev.IronBabylon
             }
 
             prop.Computed = false;
-            _nullRef = null;
-            prop.Key = Match(TT["num"]) || Match(TT["string"]) ? ParseExprAtom(ref _nullRef) : ParseIdentifier(true);
+            prop.Key = Match(TT["num"]) || Match(TT["string"]) ? ParseExprAtom() : ParseIdentifier(true);
 
             return (Node) prop.Key;
         }
@@ -1180,7 +1167,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Initialize empty function node.
         /// </summary>
-        private static void InitFunction(Node node, bool isAsync)
+        private static void InitFunction(Node node, bool isAsync = false)
         {
             node.Id = null;
             node.Generator = false;
@@ -1243,8 +1230,7 @@ namespace ModernDev.IronBabylon
 
             if (isExpression)
             {
-                _nullRef = null;
-                node.Body = ParseMaybeAssign(false, ref _nullRef);
+                node.Body = ParseMaybeAssign();
                 node.Expression = true;
             }
             else
@@ -1322,8 +1308,8 @@ namespace ModernDev.IronBabylon
         /// nothing in between them to be parsed as `null` (which is needed
         /// for array literals).
         /// </summary>
-        private List<Node> ParseExprList(TokenType close, bool allowTrailingComma, bool allowEmpty,
-            ref int? refShorthandDefaultPos)
+        private List<Node> ParseExprList(TokenType close, bool allowTrailingComma = false, bool allowEmpty = false,
+            dynamic refShorthandDefaultPos = null)
         {
             var elts = new List<Node>();
             var first = true;
@@ -1344,13 +1330,13 @@ namespace ModernDev.IronBabylon
                     }
                 }
 
-                elts.Add(ParseExprListItem(allowEmpty, ref refShorthandDefaultPos));
+                elts.Add(ParseExprListItem(allowEmpty, refShorthandDefaultPos));
             }
 
             return elts;
         }
 
-        private Node ParseExprListItemRegular(bool allowEmpty, ref int? refShorthandDefaultPos)
+        private Node ParseExprListItemRegular(bool allowEmpty = false, dynamic refShorthandDefaultPos = null)
         {
             Node elt;
 
@@ -1360,11 +1346,11 @@ namespace ModernDev.IronBabylon
             }
             else if (Match(TT["ellipsis"]))
             {
-                elt = ParseSpread(ref refShorthandDefaultPos);
+                elt = ParseSpread(refShorthandDefaultPos);
             }
             else
             {
-                elt = ParseMaybeAssign(false, ref refShorthandDefaultPos);
+                elt = ParseMaybeAssign(false, refShorthandDefaultPos);
             }
 
             return elt;
@@ -1421,9 +1407,8 @@ namespace ModernDev.IronBabylon
             {
                 Unexpected();
             }
-
-            _nullRef = null;
-            node.Argument = ParseMaybeUnary(ref _nullRef);
+            
+            node.Argument = ParseMaybeUnary();
 
             return FinishNode(node, "AwaitExpression");
         }
@@ -1445,8 +1430,7 @@ namespace ModernDev.IronBabylon
             else
             {
                 node.Delegate = Eat(TT["star"]);
-                _nullRef = null;
-                node.Argument = ParseMaybeAssign(false, ref _nullRef);
+                node.Argument = ParseMaybeAssign();
             }
 
             return FinishNode(node, "YieldExpression");

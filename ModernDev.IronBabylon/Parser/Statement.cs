@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using static ModernDev.IronBabylon.Util;
 
@@ -52,7 +53,7 @@ namespace ModernDev.IronBabylon
         /// `if (foo) /blah/.exec(foo)`, where looking at the previous token
         /// does not help.
         /// </summary>
-        private Node ParseStatementRegular(bool declaration, bool topLevel = false)
+        private Node ParseStatementRegular(bool declaration = false, bool topLevel = false)
         {
             if (Match(TT["at"]))
             {
@@ -180,8 +181,7 @@ namespace ModernDev.IronBabylon
             }
 
             var maybeName = State.Value as string;
-            _nullRef = null;
-            var expr = ParseExpression(false, ref _nullRef);
+            var expr = ParseExpression();
 
             if (startType == TT["name"] && expr.Type == "Identifier" && Eat(TT["colon"]))
             {
@@ -224,9 +224,8 @@ namespace ModernDev.IronBabylon
             var node = StartNode();
 
             Next();
-
-            _nullRef = null;
-            node.Expression = ParseMaybeAssign(false, ref _nullRef);
+            
+            node.Expression = ParseMaybeAssign();
 
             return FinishNode(node, "Decorator");
         }
@@ -294,7 +293,7 @@ namespace ModernDev.IronBabylon
 
             State.Labels.Add(LoopLabel);
 
-            node.Body = ParseStatement(false);
+            node.Body = ParseStatement();
 
             State.Labels.Pop();
             Expect(TT["_while"]);
@@ -349,8 +348,9 @@ namespace ModernDev.IronBabylon
                 return ParseFor(node, init);
             }
 
-            int? refShorthandDefaultPos = 0;
-            init = ParseExpression(true, ref refShorthandDefaultPos);
+            dynamic refShorthandDefaultPos = new ExpandoObject();
+            refShorthandDefaultPos.Start = 0;
+            init = ParseExpression(true, refShorthandDefaultPos);
 
             if (Match(TT["_in"]) || IsContextual("of"))
             {
@@ -360,9 +360,9 @@ namespace ModernDev.IronBabylon
                 return ParseForIn(node, init);
             }
 
-            if (refShorthandDefaultPos.ToBool())
+            if (refShorthandDefaultPos.Start != 0)
             {
-                Unexpected(refShorthandDefaultPos);
+                Unexpected(refShorthandDefaultPos.Start);
             }
 
             return ParseFor(node, init);
@@ -380,8 +380,8 @@ namespace ModernDev.IronBabylon
             Next();
 
             node.Test = ParseParenExpression();
-            node.Consequent = ParseStatement(false);
-            node.Altername = Eat(TT["_else"]) ? ParseStatement(false) : null;
+            node.Consequent = ParseStatement();
+            node.Altername = Eat(TT["_else"]) ? ParseStatement() : null;
 
             return FinishNode(node, "IfStatement");
         }
@@ -401,8 +401,7 @@ namespace ModernDev.IronBabylon
             }
             else
             {
-                _nullRef = null;
-                node.Argument = ParseExpression(false, ref _nullRef);
+                node.Argument = ParseExpression();
 
                 Semicolon();
             }
@@ -440,8 +439,7 @@ namespace ModernDev.IronBabylon
 
                     if (isCase)
                     {
-                        _nullRef = null;
-                        cur.Test = ParseExpression(false, ref _nullRef);
+                        cur.Test = ParseExpression();
                     }
                     else
                     {
@@ -488,9 +486,8 @@ namespace ModernDev.IronBabylon
             {
                 Raise(State.LastTokenEnd, "Illegal newline after throw");
             }
-
-            _nullRef = null;
-            node.Argument = ParseExpression(false, ref _nullRef);
+            
+            node.Argument = ParseExpression();
 
             Semicolon();
 
@@ -548,7 +545,7 @@ namespace ModernDev.IronBabylon
 
             State.Labels.Add(LoopLabel);
 
-            node.Body = ParseStatement(false);
+            node.Body = ParseStatement();
 
             State.Labels.Pop();
 
@@ -565,7 +562,7 @@ namespace ModernDev.IronBabylon
             Next();
 
             node.Object = ParseParenExpression();
-            node.Body = ParseStatement(false);
+            node.Body = ParseStatement();
 
             return FinishNode(node, "WithStatement");
         }
@@ -700,18 +697,16 @@ namespace ModernDev.IronBabylon
             node.Init = init;
 
             Expect(TT["semi"]);
-
-            _nullRef = null;
-            node.Test = Match(TT["semi"]) ? null : ParseExpression(false, ref _nullRef);
+            
+            node.Test = Match(TT["semi"]) ? null : ParseExpression();
 
             Expect(TT["semi"]);
-
-            _nullRef = null;
-            node.Update = Match(TT["parenR"]) ? null : ParseExpression(false, ref _nullRef);
+            
+            node.Update = Match(TT["parenR"]) ? null : ParseExpression();
 
             Expect(TT["parenR"]);
 
-            node.Body = ParseStatement(false);
+            node.Body = ParseStatement();
 
             State.Labels.Pop();
 
@@ -728,12 +723,11 @@ namespace ModernDev.IronBabylon
             Next();
 
             node.Left = init;
-            _nullRef = null;
-            node.Right = ParseExpression(false, ref _nullRef);
+            node.Right = ParseExpression();
 
             Expect(TT["parenR"]);
 
-            node.Body = ParseStatement(false);
+            node.Body = ParseStatement();
 
             State.Labels.Pop();
 
@@ -753,8 +747,7 @@ namespace ModernDev.IronBabylon
 
                 if (Eat(TT["eq"]))
                 {
-                    _nullRef = null;
-                    decl.Init = ParseMaybeAssign(isFor, ref _nullRef);
+                    decl.Init = ParseMaybeAssign(isFor);
                 }
                 else if (kind == TT["_const"] && !(Match(TT["_in"]) || IsContextual("of")))
                 {
@@ -790,7 +783,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parse a function declaration or literal (depending on the `isStatement` parameter).
         /// </summary>
-        private Node ParseFunction(Node node, bool isStatement, bool allowExpressionBody = false, bool isAsync = false,
+        private Node ParseFunction(Node node, bool isStatement = false, bool allowExpressionBody = false, bool isAsync = false,
             bool optionalId = false)
         {
             var oldMethod = State.InMethod;
@@ -833,7 +826,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// Parse a class declaration or literal (depending on the `isStatement` parameter).
         /// </summary>
-        private Node ParseClass(Node node, bool isStatement, bool optionalId = false)
+        private Node ParseClass(Node node, bool isStatement = false, bool optionalId = false)
         {
             Next();
             ParseClassId(node, isStatement, optionalId);
@@ -1041,9 +1034,8 @@ namespace ModernDev.IronBabylon
             if (Match(TT["eq"]))
             {
                 Next();
-
-                _nullRef = null;
-                node.Value = ParseMaybeAssign(false, ref _nullRef);
+                
+                node.Value = ParseMaybeAssign();
             }
             else
             {
@@ -1055,13 +1047,13 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, "ClassProperty");
         }
 
-        private void ParseClassMethodRegular(Node classBody, Node method, bool isGenerator, bool isAsync)
+        private void ParseClassMethodRegular(Node classBody, Node method, bool isGenerator = false, bool isAsync = false)
         {
             ParseMethod(method, isGenerator, isAsync);
             ((List<Node>) classBody.Body).Add(FinishNode(method, "ClassMethod"));
         }
 
-        private void ParseClassIdRegular(Node node, bool isStatement, bool optionalId = false)
+        private void ParseClassIdRegular(Node node, bool isStatement = false, bool optionalId = false)
         {
             if (Match(TT["name"]))
             {
@@ -1082,8 +1074,7 @@ namespace ModernDev.IronBabylon
 
         private void ParseClassSuperRegular(Node node)
         {
-            _nullRef = null;
-            node.SuperClass = Eat(TT["_extends"]) ? ParseExprSubscripts(ref _nullRef) : null;
+            node.SuperClass = Eat(TT["_extends"]) ? ParseExprSubscripts() : null;
         }
 
         /// <summary>
@@ -1157,8 +1148,7 @@ namespace ModernDev.IronBabylon
                 else
                 {
                     needsSemi = true;
-                    _nullRef = null;
-                    expr = ParseMaybeAssign(false, ref _nullRef);
+                    expr = ParseMaybeAssign();
                 }
 
                 node.Declaration = expr;
@@ -1233,8 +1223,7 @@ namespace ModernDev.IronBabylon
             {
                 if (Match(TT["string"]))
                 {
-                    _nullRef = null;
-                    node.Source = ParseExprAtom(ref _nullRef);
+                    node.Source = ParseExprAtom();
                 }
                 else
                 {
@@ -1336,8 +1325,7 @@ namespace ModernDev.IronBabylon
 
             if (Match(TT["string"]))
             {
-                _nullRef = null;
-                node.Source = ParseExprAtom(ref _nullRef);
+                node.Source = ParseExprAtom();
             }
             else
             {
@@ -1346,8 +1334,7 @@ namespace ModernDev.IronBabylon
 
                 if (Match(TT["string"]))
                 {
-                    _nullRef = null;
-                    node.Source = ParseExprAtom(ref _nullRef);
+                    node.Source = ParseExprAtom();
                 }
                 else
                 {

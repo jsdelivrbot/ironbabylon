@@ -22,8 +22,6 @@ namespace ModernDev.IronBabylon
 
         private ParserOptions Options { get; }
 
-        private static int? _nullRef;
-
         #endregion
 
         #region Class methods

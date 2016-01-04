@@ -90,7 +90,7 @@ namespace ModernDev.IronBabylon
         {
             Next();
 
-            node.Id = Match(TT["string"]) ? ParseExprAtom(ref _nullRef) : ParseIdentifier();
+            node.Id = Match(TT["string"]) ? ParseExprAtom() : ParseIdentifier();
 
             var bodyNode = StartNode();
             node.Body = bodyNode;
@@ -187,12 +187,6 @@ namespace ModernDev.IronBabylon
             }
 
             return res;
-
-            /*return new Dictionary<string, object>
-            {
-                {"params", prms},
-                {"rest", rest}
-            };*/
         }
 
         private Node FlowIdentToTypeAnnotation(int startPos, Position startLoc, Node node,
@@ -224,7 +218,7 @@ namespace ModernDev.IronBabylon
             }
         }
 
-        private void FlowParseInterfaceish(Node node, bool allowStatic)
+        private void FlowParseInterfaceish(Node node, bool allowStatic = false)
         {
             node.Id = ParseIdentifier();
             node.TypeParameters = IsRelational("<") ? FlowParseTypeParameterDeclaration() : null;
@@ -321,7 +315,7 @@ namespace ModernDev.IronBabylon
 
         private Node FlowParseInterface(Node node)
         {
-            FlowParseInterfaceish(node, false);
+            FlowParseInterfaceish(node);
 
             return FinishNode(node, "InterfaceDeclaration");
         }
@@ -402,10 +396,10 @@ namespace ModernDev.IronBabylon
         }
 
         private Node FlowParseObjectPropertyKey() => (Match(TT["num"]) || Match(TT["string"]))
-            ? ParseExprAtom(ref _nullRef)
+            ? ParseExprAtom()
             : ParseIdentifier(true);
 
-        private Node FlowParseObjectTypeIndexer(Node node, bool isStatic)
+        private Node FlowParseObjectTypeIndexer(Node node, bool isStatic = false)
         {
             node.Static = isStatic;
 
@@ -473,7 +467,7 @@ namespace ModernDev.IronBabylon
             return FinishNode(node, "ObjectTypeProperty");
         }
 
-        private Node FlowParseObjectTypeCallProperty(Node node, bool isStatic)
+        private Node FlowParseObjectTypeCallProperty(Node node, bool isStatic = false)
         {
             var valueNode = StartNode();
 
@@ -816,7 +810,7 @@ namespace ModernDev.IronBabylon
             ParseFunctionBodyRegular(node, allowExpression);
         }
 
-        private Node ParseStatement(bool declaration, bool topLevel = false)
+        private Node ParseStatement(bool declaration = false, bool topLevel = false)
         {
             if (State.Strict && Match(TT["name"]) && (string) State.Value == "interface")
             {
@@ -980,7 +974,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// turn type casts that we found in function parameter head into type annotated params
         /// </summary>
-        private List<Node> ToAssignableList(List<Node> exprList, bool isBinding)
+        private List<Node> ToAssignableList(List<Node> exprList, bool isBinding = false)
         {
             for (var i = 0; i < exprList.Count; i++)
             {
@@ -1013,10 +1007,10 @@ namespace ModernDev.IronBabylon
         /// parse an item inside a expression list eg. `(NODE, NODE)` where NODE represents
         /// the position where this function is cal;ed
         /// </summary>
-        private Node ParseExprListItem(bool allowEmpty, ref int? refShorthandDefaultPos)
+        private Node ParseExprListItem(bool allowEmpty = false, dynamic refShorthandDefaultPos = null)
         {
             var container = StartNode();
-            var node = ParseExprListItemRegular(allowEmpty, ref refShorthandDefaultPos);
+            var node = ParseExprListItemRegular(allowEmpty, refShorthandDefaultPos);
 
             if (Match(TT["colon"]))
             {
@@ -1059,7 +1053,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// parse type parameters for class methods
         /// </summary>
-        private void ParseClassMethod(Node classBody, Node method, bool isGenerator, bool isAsync)
+        private void ParseClassMethod(Node classBody, Node method, bool isGenerator = false, bool isAsync = false)
         {
             if (IsRelational("<"))
             {
@@ -1102,7 +1096,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// parse type parameters for object method shorthand
         /// </summary>
-        private void ParseObjPropValue(Node prop, int startPos, Position startLoc, bool isGenerator, bool isAsync, bool isPattern, ref int? refShorthandDefaultPos)
+        private void ParseObjPropValue(Node prop, int startPos, Position startLoc, bool isGenerator = false, bool isAsync = false, bool isPattern = false, dynamic refShorthandDefaultPos = null)
         {
             Node typeParameters = null;
 
@@ -1117,7 +1111,7 @@ namespace ModernDev.IronBabylon
             }
 
             ParseObjPropValueRegular(prop, startPos, startLoc, isGenerator, isAsync, isPattern,
-                ref refShorthandDefaultPos);
+                refShorthandDefaultPos);
 
             if (typeParameters)
             {
@@ -1226,7 +1220,7 @@ namespace ModernDev.IronBabylon
         /// <summary>
         /// handle return types for arrow functions
         /// </summary>
-        private Node ParseParenAndDistinguishExpression(int? startPos, Position startLoc, bool canBeArrow,
+        private Node ParseParenAndDistinguishExpression(int? startPos, Position startLoc, bool canBeArrow = false,
             bool isAsync = false)
         {
             startPos = startPos ?? State.Start;
