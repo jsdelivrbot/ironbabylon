@@ -117,5 +117,8 @@ namespace ModernDev.IronBabylon
 
         public static int CharCodeAt(this string source, int position, int defaultReturn = int.MaxValue)
             => position >= source.Length ? defaultReturn : source[position];
+
+        public static string FromCharCodeToString(this int @this)
+            => @this >= char.MinValue && @this <= char.MaxValue ? ToChar(@this).ToString() : "\u0000";
     }
 }
