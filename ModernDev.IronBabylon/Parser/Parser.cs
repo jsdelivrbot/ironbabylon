@@ -10,7 +10,7 @@ namespace ModernDev.IronBabylon
             InModule = options?.SourceType == "module";
             Input = input;
 
-            if (State.Position == 0 && Input[0] == '#' && input[1] == '!')
+            if (State.Position == 0 && Input.CharCodeAt(0) == '#' && Input.CharCodeAt(1) == '!')
             {
                 SkipLineComment(2);
             }

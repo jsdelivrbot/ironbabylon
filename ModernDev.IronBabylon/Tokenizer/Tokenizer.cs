@@ -240,7 +240,7 @@ namespace ModernDev.IronBabylon
 					break;
 				}
 
-				int ch = Input[State.Position];
+				int ch = Input.CharCodeAt(State.Position);
 
 				switch (ch)
 				{
@@ -257,7 +257,7 @@ namespace ModernDev.IronBabylon
 					case 8232:
 					case 8233:
 					{
-						if (ch == 13 && Input[State.Position + 1] == 10)
+							if (ch == 13 && Input.CharCodeAt(State.Position + 1) == 10)
 						{
 							++State.Position;
 						}
@@ -270,7 +270,7 @@ namespace ModernDev.IronBabylon
 
 					case 47:
 					{
-						switch ((int) Input[State.Position + 1])
+						switch (Input.CharCodeAt(State.Position + 1))
 						{
 							case 42:
 								SkipBlockComment();
@@ -548,7 +548,7 @@ namespace ModernDev.IronBabylon
 				case 57:
 					if (code == 48)
 					{
-						var next = State.Position + 1 >= Input.Length ? int.MaxValue : Input[State.Position + 1];
+						var next = State.Position + 1 >= Input.Length ? int.MaxValue : Input.CharCodeAt(State.Position + 1);
 
 						switch (next)
 						{
@@ -630,7 +630,7 @@ namespace ModernDev.IronBabylon
 					Raise(start, "Unterminated regular expression");
 				}
 
-				var ch = Input[State.Position];
+				var ch = Input.CharCodeAt(State.Position);
 
 				if (LineBreak.IsMatch(ch.ToString()))
 				{
@@ -973,7 +973,7 @@ namespace ModernDev.IronBabylon
 		/// </summary>
 		private string ReadEscapedChar(bool inTemplate )
 		{
-			int ch = Input.CharCodeAt(++State.Position);
+			var ch = Input.CharCodeAt(++State.Position);
 
 			++State.Position;
 
@@ -1042,13 +1042,13 @@ namespace ModernDev.IronBabylon
 
 						State.Position += octalStr.Length - 1;
 
-						return ToChar(octal).ToString();
+						return octal.FromCharCodeToString();
 					}
 
-					return ToChar(ch).ToString();
+			        return ch.FromCharCodeToString();
 			}
 		}
-
+		
 		/// <summary>
 		/// Used to read character escape sequences ('\x', '\u', '\U').
 		/// </summary>
@@ -1095,7 +1095,7 @@ namespace ModernDev.IronBabylon
 					word += Input.Slice(chunkStart, State.Position);
 					var escStart = State.Position;
 
-					if (Input[++State.Position] != 117)
+					if (Input.CharCodeAt(++State.Position) != 117)
 					{
 						Raise(State.Position, "Expecting Unicode escape sequence \\uXXXX");
 					}
