@@ -27,7 +27,15 @@ namespace ModernDev.IronBabylon
             }
 
             node.Extra = node.Extra ?? new Dictionary<string, object>();
-            node.Extra.Add(key, val);
+
+            if (node.Extra.ContainsKey(key))
+            {
+                node.Extra[key] = val;
+            }
+            else
+            {
+                node.Extra.Add(key, val);
+            }
         }
 
         private bool IsRelational(string op) => Match(TT["relational"]) && (string) State.Value == op;
