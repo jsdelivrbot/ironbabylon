@@ -1,0 +1,158 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 5,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 2,
+        "column": 2
+      }
+    },
+    "body": [
+      {
+        "type": "ExpressionStatement",
+        "start": 3,
+        "end": 5,
+        "loc": {
+          "start": {
+            "line": 2,
+            "column": 0
+          },
+          "end": {
+            "line": 2,
+            "column": 2
+          }
+        },
+        "leadingComments": [
+          {
+            "type": "CommentLine",
+            "start": 0,
+            "end": 2,
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 2
+              }
+            },
+            "value": ""
+          }
+        ],
+        "expression": {
+          "type": "NumericLiteral",
+          "start": 3,
+          "end": 5,
+          "loc": {
+            "start": {
+              "line": 2,
+              "column": 0
+            },
+            "end": {
+              "line": 2,
+              "column": 2
+            }
+          },
+          "extra": {
+            "rawValue": 42,
+            "raw": "42"
+          },
+          "value": 42
+        }
+      }
+    ],
+    "sourceType": "script"
+  },
+  "start": 0,
+  "end": 5,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 2,
+      "column": 2
+    }
+  },
+  "comments": [
+    {
+      "type": "CommentLine",
+      "start": 0,
+      "end": 2,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 2
+        }
+      },
+      "value": ""
+    }
+  ],
+  "tokens": [
+    {
+      "type": "CommentLine",
+      "start": 0,
+      "end": 2,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 2
+        }
+      },
+      "value": ""
+    },
+    {
+      "type": {
+        "label": "num",
+        "startsExpr": true
+      },
+      "value": 42,
+      "start": 3,
+      "end": 5,
+      "location": {
+        "start": {
+          "line": 2,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 2
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 5,
+      "end": 5,
+      "location": {
+        "start": {
+          "line": 2,
+          "column": 2
+        },
+        "end": {
+          "line": 2,
+          "column": 2
+        }
+      }
+    }
+  ]
+}

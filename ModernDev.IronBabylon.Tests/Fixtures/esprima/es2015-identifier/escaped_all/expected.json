@@ -1,0 +1,157 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 24,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 2,
+        "column": 0
+      }
+    },
+    "body": [
+      {
+        "type": "VariableDeclaration",
+        "start": 0,
+        "end": 23,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 23
+          }
+        },
+        "kind": "var",
+        "declarations": [
+          {
+            "type": "VariableDeclarator",
+            "start": 4,
+            "end": 22,
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 4
+              },
+              "end": {
+                "line": 1,
+                "column": 22
+              }
+            },
+            "id": {
+              "type": "Identifier",
+              "start": 4,
+              "end": 22,
+              "loc": {
+                "start": {
+                  "line": 1,
+                  "column": 4
+                },
+                "end": {
+                  "line": 1,
+                  "column": 22
+                }
+              },
+              "name": "ABC"
+            }
+          }
+        ]
+      }
+    ],
+    "sourceType": "script"
+  },
+  "start": 0,
+  "end": 24,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 2,
+      "column": 0
+    }
+  },
+  "tokens": [
+    {
+      "type": {
+        "label": "var",
+        "keyword": "var"
+      },
+      "value": "var",
+      "start": 0,
+      "end": 3,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "startsExpr": true
+      },
+      "value": "ABC",
+      "start": 4,
+      "end": 22,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 4
+        },
+        "end": {
+          "line": 1,
+          "column": 22
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ";",
+        "beforeExpr": true
+      },
+      "start": 22,
+      "end": 23,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 22
+        },
+        "end": {
+          "line": 1,
+          "column": 23
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 24,
+      "end": 24,
+      "location": {
+        "start": {
+          "line": 2,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 0
+        }
+      }
+    }
+  ]
+}

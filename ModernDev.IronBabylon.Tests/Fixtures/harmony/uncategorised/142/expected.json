@@ -1,0 +1,385 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 19,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 1,
+        "column": 19
+      }
+    },
+    "body": [
+      {
+        "type": "ExpressionStatement",
+        "start": 0,
+        "end": 19,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 19
+          }
+        },
+        "expression": {
+          "type": "ObjectExpression",
+          "start": 1,
+          "end": 18,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "line": 1,
+              "column": 18
+            }
+          },
+          "extra": {
+            "parenthesized": true,
+            "parenStart": 0
+          },
+          "properties": [
+            {
+              "type": "ObjectProperty",
+              "start": 2,
+              "end": 17,
+              "loc": {
+                "start": {
+                  "line": 1,
+                  "column": 2
+                },
+                "end": {
+                  "line": 1,
+                  "column": 17
+                }
+              },
+              "value": {
+                "type": "NumericLiteral",
+                "start": 15,
+                "end": 17,
+                "loc": {
+                  "start": {
+                    "line": 1,
+                    "column": 15
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 17
+                  }
+                },
+                "extra": {
+                  "rawValue": 10,
+                  "raw": "10"
+                },
+                "value": 10
+              },
+              "computed": true,
+              "key": {
+                "type": "BinaryExpression",
+                "start": 3,
+                "end": 12,
+                "loc": {
+                  "start": {
+                    "line": 1,
+                    "column": 3
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 12
+                  }
+                },
+                "left": {
+                  "type": "StringLiteral",
+                  "start": 3,
+                  "end": 6,
+                  "loc": {
+                    "start": {
+                      "line": 1,
+                      "column": 3
+                    },
+                    "end": {
+                      "line": 1,
+                      "column": 6
+                    }
+                  },
+                  "extra": {
+                    "rawValue": "x",
+                    "raw": "\"x\""
+                  },
+                  "value": "x"
+                },
+                "right": {
+                  "type": "StringLiteral",
+                  "start": 9,
+                  "end": 12,
+                  "loc": {
+                    "start": {
+                      "line": 1,
+                      "column": 9
+                    },
+                    "end": {
+                      "line": 1,
+                      "column": 12
+                    }
+                  },
+                  "extra": {
+                    "rawValue": "y",
+                    "raw": "\"y\""
+                  },
+                  "value": "y"
+                },
+                "operator": "+"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "sourceType": "script"
+  },
+  "start": 0,
+  "end": 19,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 1,
+      "column": 19
+    }
+  },
+  "tokens": [
+    {
+      "type": {
+        "label": "(",
+        "beforeExpr": true,
+        "startsExpr": true
+      },
+      "start": 0,
+      "end": 1,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "{",
+        "beforeExpr": true,
+        "startsExpr": true
+      },
+      "start": 1,
+      "end": 2,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "line": 1,
+          "column": 2
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "[",
+        "beforeExpr": true,
+        "startsExpr": true
+      },
+      "start": 2,
+      "end": 3,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 2
+        },
+        "end": {
+          "line": 1,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "startsExpr": true
+      },
+      "value": "x",
+      "start": 3,
+      "end": 6,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 3
+        },
+        "end": {
+          "line": 1,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "+/-",
+        "beforeExpr": true,
+        "startsExpr": true,
+        "prefix": true,
+        "binop": 9
+      },
+      "value": "+",
+      "start": 7,
+      "end": 8,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 7
+        },
+        "end": {
+          "line": 1,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "startsExpr": true
+      },
+      "value": "y",
+      "start": 9,
+      "end": 12,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 9
+        },
+        "end": {
+          "line": 1,
+          "column": 12
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "]"
+      },
+      "start": 12,
+      "end": 13,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 12
+        },
+        "end": {
+          "line": 1,
+          "column": 13
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true
+      },
+      "start": 13,
+      "end": 14,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 13
+        },
+        "end": {
+          "line": 1,
+          "column": 14
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "num",
+        "startsExpr": true
+      },
+      "value": 10,
+      "start": 15,
+      "end": 17,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 15
+        },
+        "end": {
+          "line": 1,
+          "column": 17
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "}"
+      },
+      "start": 17,
+      "end": 18,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 17
+        },
+        "end": {
+          "line": 1,
+          "column": 18
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ")"
+      },
+      "start": 18,
+      "end": 19,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 18
+        },
+        "end": {
+          "line": 1,
+          "column": 19
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 19,
+      "end": 19,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 19
+        },
+        "end": {
+          "line": 1,
+          "column": 19
+        }
+      }
+    }
+  ]
+}

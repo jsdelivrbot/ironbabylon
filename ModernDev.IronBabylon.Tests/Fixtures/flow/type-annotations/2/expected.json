@@ -1,0 +1,313 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 30,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 1,
+        "column": 30
+      }
+    },
+    "body": [
+      {
+        "type": "FunctionDeclaration",
+        "start": 0,
+        "end": 30,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 30
+          }
+        },
+        "body": {
+          "type": "BlockStatement",
+          "start": 28,
+          "end": 30,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 28
+            },
+            "end": {
+              "line": 1,
+              "column": 30
+            }
+          }
+        },
+        "id": {
+          "type": "Identifier",
+          "start": 9,
+          "end": 12,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 9
+            },
+            "end": {
+              "line": 1,
+              "column": 12
+            }
+          },
+          "name": "foo"
+        },
+        "params": [
+          {
+            "type": "Identifier",
+            "start": 13,
+            "end": 27,
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 13
+              },
+              "end": {
+                "line": 1,
+                "column": 27
+              }
+            },
+            "name": "numVal",
+            "typeAnnotation": {
+              "type": "TypeAnnotation",
+              "start": 19,
+              "end": 27,
+              "loc": {
+                "start": {
+                  "line": 1,
+                  "column": 19
+                },
+                "end": {
+                  "line": 1,
+                  "column": 27
+                }
+              },
+              "typeAnnotation": {
+                "type": "NumberTypeAnnotation",
+                "start": 21,
+                "end": 27,
+                "loc": {
+                  "start": {
+                    "line": 1,
+                    "column": 21
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 27
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "sourceType": "module"
+  },
+  "start": 0,
+  "end": 30,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 1,
+      "column": 30
+    }
+  },
+  "tokens": [
+    {
+      "type": {
+        "label": "function",
+        "keyword": "function",
+        "startsExpr": true
+      },
+      "value": "function",
+      "start": 0,
+      "end": 8,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "startsExpr": true
+      },
+      "value": "foo",
+      "start": 9,
+      "end": 12,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 9
+        },
+        "end": {
+          "line": 1,
+          "column": 12
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "(",
+        "beforeExpr": true,
+        "startsExpr": true
+      },
+      "start": 12,
+      "end": 13,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 12
+        },
+        "end": {
+          "line": 1,
+          "column": 13
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "startsExpr": true
+      },
+      "value": "numVal",
+      "start": 13,
+      "end": 19,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 13
+        },
+        "end": {
+          "line": 1,
+          "column": 19
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true
+      },
+      "start": 19,
+      "end": 20,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 19
+        },
+        "end": {
+          "line": 1,
+          "column": 20
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "startsExpr": true
+      },
+      "value": "number",
+      "start": 21,
+      "end": 27,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 21
+        },
+        "end": {
+          "line": 1,
+          "column": 27
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ")"
+      },
+      "start": 27,
+      "end": 28,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 27
+        },
+        "end": {
+          "line": 1,
+          "column": 28
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "{",
+        "beforeExpr": true,
+        "startsExpr": true
+      },
+      "start": 28,
+      "end": 29,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 28
+        },
+        "end": {
+          "line": 1,
+          "column": 29
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "}"
+      },
+      "start": 29,
+      "end": 30,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 29
+        },
+        "end": {
+          "line": 1,
+          "column": 30
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 30,
+      "end": 30,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 30
+        },
+        "end": {
+          "line": 1,
+          "column": 30
+        }
+      }
+    }
+  ]
+}

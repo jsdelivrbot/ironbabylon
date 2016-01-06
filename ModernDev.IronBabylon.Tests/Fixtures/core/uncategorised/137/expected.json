@@ -1,0 +1,139 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 11,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 1,
+        "column": 11
+      }
+    },
+    "body": [
+      {
+        "type": "ExpressionStatement",
+        "start": 0,
+        "end": 11,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 11
+          }
+        },
+        "expression": {
+          "type": "UpdateExpression",
+          "start": 0,
+          "end": 11,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 11
+            }
+          },
+          "argument": {
+            "type": "Identifier",
+            "start": 0,
+            "end": 9,
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 9
+              }
+            },
+            "name": "arguments"
+          },
+          "operator": "--"
+        }
+      }
+    ],
+    "sourceType": "script"
+  },
+  "start": 0,
+  "end": 11,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 1,
+      "column": 11
+    }
+  },
+  "tokens": [
+    {
+      "type": {
+        "label": "name",
+        "startsExpr": true
+      },
+      "value": "arguments",
+      "start": 0,
+      "end": 9,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 9
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "++/--",
+        "startsExpr": true,
+        "prefix": true,
+        "postfix": true
+      },
+      "value": "--",
+      "start": 9,
+      "end": 11,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 9
+        },
+        "end": {
+          "line": 1,
+          "column": 11
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 11,
+      "end": 11,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 11
+        },
+        "end": {
+          "line": 1,
+          "column": 11
+        }
+      }
+    }
+  ]
+}

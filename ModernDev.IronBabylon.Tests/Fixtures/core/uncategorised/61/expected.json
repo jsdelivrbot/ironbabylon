@@ -1,0 +1,102 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 3,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 1,
+        "column": 3
+      }
+    },
+    "innerComments": [
+      {
+        "type": "CommentLine",
+        "start": 0,
+        "end": 3,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 3
+          }
+        },
+        "value": " "
+      }
+    ],
+    "sourceType": "script"
+  },
+  "start": 0,
+  "end": 3,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 1,
+      "column": 3
+    }
+  },
+  "comments": [
+    {
+      "type": "CommentLine",
+      "start": 0,
+      "end": 3,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 3
+        }
+      },
+      "value": " "
+    }
+  ],
+  "tokens": [
+    {
+      "type": "CommentLine",
+      "start": 0,
+      "end": 3,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 3
+        }
+      },
+      "value": " "
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 3,
+      "end": 3,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 3
+        },
+        "end": {
+          "line": 1,
+          "column": 3
+        }
+      }
+    }
+  ]
+}

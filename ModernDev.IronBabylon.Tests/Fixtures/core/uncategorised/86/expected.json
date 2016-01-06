@@ -1,0 +1,105 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 22,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 1,
+        "column": 22
+      }
+    },
+    "sourceType": "script",
+    "directives": [
+      {
+        "type": "Directive",
+        "start": 0,
+        "end": 22,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 22
+          }
+        },
+        "value": {
+          "type": "DirectiveLiteral",
+          "start": 0,
+          "end": 22,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 22
+            }
+          },
+          "extra": {
+            "raw": "\"\\n\\r\\t\\v\\b\\f\\\\\\'\\\"\\0\"",
+            "rawValue": "\\n\\r\\t\\v\\b\\f\\\\\\'\\\"\\0"
+          }
+        }
+      }
+    ]
+  },
+  "start": 0,
+  "end": 22,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 1,
+      "column": 22
+    }
+  },
+  "tokens": [
+    {
+      "type": {
+        "label": "string",
+        "startsExpr": true
+      },
+      "value": "\n\r\t\u000b\b\f\\'\"\u0000",
+      "start": 0,
+      "end": 22,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 22
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 22,
+      "end": 22,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 22
+        },
+        "end": {
+          "line": 1,
+          "column": 22
+        }
+      }
+    }
+  ]
+}

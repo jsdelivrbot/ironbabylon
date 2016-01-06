@@ -1,0 +1,158 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 10,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 2,
+        "column": 6
+      }
+    },
+    "body": [
+      {
+        "type": "ExpressionStatement",
+        "start": 8,
+        "end": 10,
+        "loc": {
+          "start": {
+            "line": 2,
+            "column": 4
+          },
+          "end": {
+            "line": 2,
+            "column": 6
+          }
+        },
+        "leadingComments": [
+          {
+            "type": "CommentBlock",
+            "start": 0,
+            "end": 7,
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 2,
+                "column": 3
+              }
+            },
+            "value": "a\nb"
+          }
+        ],
+        "expression": {
+          "type": "NumericLiteral",
+          "start": 8,
+          "end": 10,
+          "loc": {
+            "start": {
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "line": 2,
+              "column": 6
+            }
+          },
+          "extra": {
+            "rawValue": 42,
+            "raw": "42"
+          },
+          "value": 42
+        }
+      }
+    ],
+    "sourceType": "script"
+  },
+  "start": 0,
+  "end": 10,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 2,
+      "column": 6
+    }
+  },
+  "comments": [
+    {
+      "type": "CommentBlock",
+      "start": 0,
+      "end": 7,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 3
+        }
+      },
+      "value": "a\nb"
+    }
+  ],
+  "tokens": [
+    {
+      "type": "CommentBlock",
+      "start": 0,
+      "end": 7,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 3
+        }
+      },
+      "value": "a\nb"
+    },
+    {
+      "type": {
+        "label": "num",
+        "startsExpr": true
+      },
+      "value": 42,
+      "start": 8,
+      "end": 10,
+      "location": {
+        "start": {
+          "line": 2,
+          "column": 4
+        },
+        "end": {
+          "line": 2,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 10,
+      "end": 10,
+      "location": {
+        "start": {
+          "line": 2,
+          "column": 6
+        },
+        "end": {
+          "line": 2,
+          "column": 6
+        }
+      }
+    }
+  ]
+}

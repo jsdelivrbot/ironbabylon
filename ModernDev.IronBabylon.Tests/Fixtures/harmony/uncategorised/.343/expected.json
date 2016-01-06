@@ -1,0 +1,123 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 13,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 1,
+        "column": 13
+      }
+    },
+    "body": [
+      {
+        "type": "ExpressionStatement",
+        "start": 0,
+        "end": 13,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 13
+          }
+        },
+        "expression": {
+          "type": "RegExpLiteral",
+          "start": 0,
+          "end": 13,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 13
+            }
+          },
+          "extra": {
+            "rawValue": {
+              "start": 0,
+              "end": 0,
+              "pattern": "\\u{110000}",
+              "flags": "u"
+            },
+            "raw": "/\\u{110000}/u"
+          },
+          "value": {
+            "start": 0,
+            "end": 0,
+            "pattern": "\\u{110000}",
+            "flags": "u"
+          },
+          "pattern": "\\u{110000}",
+          "flags": "u"
+        }
+      }
+    ],
+    "sourceType": "script"
+  },
+  "start": 0,
+  "end": 13,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 1,
+      "column": 13
+    }
+  },
+  "tokens": [
+    {
+      "type": {
+        "label": "regexp",
+        "startsExpr": true
+      },
+      "value": {
+        "start": 0,
+        "end": 0,
+        "pattern": "\\u{110000}",
+        "flags": "u"
+      },
+      "start": 0,
+      "end": 13,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 13
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 13,
+      "end": 13,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 13
+        },
+        "end": {
+          "line": 1,
+          "column": 13
+        }
+      }
+    }
+  ]
+}

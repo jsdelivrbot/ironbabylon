@@ -1,0 +1,232 @@
+{
+  "type": "File",
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 12,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 1,
+        "column": 12
+      }
+    },
+    "body": [
+      {
+        "type": "IfStatement",
+        "start": 0,
+        "end": 12,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 12
+          }
+        },
+        "test": {
+          "type": "NumericLiteral",
+          "start": 3,
+          "end": 4,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 3
+            },
+            "end": {
+              "line": 1,
+              "column": 4
+            }
+          },
+          "extra": {
+            "rawValue": 1,
+            "raw": "1"
+          },
+          "value": 1
+        },
+        "consequent": {
+          "type": "ExpressionStatement",
+          "start": 5,
+          "end": 12,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 5
+            },
+            "end": {
+              "line": 1,
+              "column": 12
+            }
+          },
+          "expression": {
+            "type": "RegExpLiteral",
+            "start": 5,
+            "end": 12,
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 5
+              },
+              "end": {
+                "line": 1,
+                "column": 12
+              }
+            },
+            "extra": {
+              "rawValue": {
+                "start": 0,
+                "end": 0,
+                "pattern": "  foo",
+                "flags": ""
+              },
+              "raw": "/  foo/"
+            },
+            "value": {
+              "start": 0,
+              "end": 0,
+              "pattern": "  foo",
+              "flags": ""
+            },
+            "pattern": "  foo",
+            "flags": ""
+          }
+        }
+      }
+    ],
+    "sourceType": "script"
+  },
+  "start": 0,
+  "end": 12,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 1,
+      "column": 12
+    }
+  },
+  "tokens": [
+    {
+      "type": {
+        "label": "if",
+        "keyword": "if"
+      },
+      "value": "if",
+      "start": 0,
+      "end": 2,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 2
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "(",
+        "beforeExpr": true,
+        "startsExpr": true
+      },
+      "start": 2,
+      "end": 3,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 2
+        },
+        "end": {
+          "line": 1,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "num",
+        "startsExpr": true
+      },
+      "value": 1,
+      "start": 3,
+      "end": 4,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 3
+        },
+        "end": {
+          "line": 1,
+          "column": 4
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ")"
+      },
+      "start": 4,
+      "end": 5,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 4
+        },
+        "end": {
+          "line": 1,
+          "column": 5
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "regexp",
+        "startsExpr": true
+      },
+      "value": {
+        "start": 0,
+        "end": 0,
+        "pattern": "  foo",
+        "flags": ""
+      },
+      "start": 5,
+      "end": 12,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 5
+        },
+        "end": {
+          "line": 1,
+          "column": 12
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof"
+      },
+      "start": 12,
+      "end": 12,
+      "location": {
+        "start": {
+          "line": 1,
+          "column": 12
+        },
+        "end": {
+          "line": 1,
+          "column": 12
+        }
+      }
+    }
+  ]
+}
