@@ -1,4 +1,4 @@
 namespace ModernDev.IronBabylon
 {
-    public interface IExpression : INode { }
+    public interface IExpression : ILVal { }
 }
